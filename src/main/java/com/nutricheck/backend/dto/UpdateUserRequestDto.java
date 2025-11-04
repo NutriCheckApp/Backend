@@ -35,6 +35,6 @@ public class UpdateUserRequestDto {
     private String activity_level;
 
     @Positive(message = "Goal weight must be a positive number")
-    private double goal_weight;
+    private BigDecimal goal_weight;
 
 }

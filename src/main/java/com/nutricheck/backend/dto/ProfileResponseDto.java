@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,16 +21,16 @@ public class ProfileResponseDto {
 
     private String gender;
 
-    private double weight;
+    private BigDecimal weight;
 
-    private double height;
+    private BigDecimal height;
 
     private String activity_level;
 
-    private double bmr;
+    private BigDecimal bmr;
 
-    private double tdee;
+    private BigDecimal tdee;
 
-    private double goal_weight;
+    private BigDecimal goal_weight;
 
 }
