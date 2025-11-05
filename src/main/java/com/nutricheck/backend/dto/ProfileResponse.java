@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileResponseDto {
+public class ProfileResponse {
 
     private Long user_id;
 

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUserRequestDto {
+public class UpdateUserRequest {
 
     @NotBlank(message = "Name cannot be empty")
     @Size(max = 50)

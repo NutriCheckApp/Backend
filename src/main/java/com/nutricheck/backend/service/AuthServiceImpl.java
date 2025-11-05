@@ -1,22 +1,22 @@
 package com.nutricheck.backend.service;
 
-import com.nutricheck.backend.dto.AuthResponseDto;
-import com.nutricheck.backend.dto.LoginRequestDto;
-import com.nutricheck.backend.dto.RegisterRequestDto;
+import com.nutricheck.backend.dto.AuthResponse;
+import com.nutricheck.backend.dto.LoginRequest;
+import com.nutricheck.backend.dto.RegisterRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     @Override
-    public AuthResponseDto register(RegisterRequestDto request) {
+    public AuthResponse register(RegisterRequest request) {
         // todo: implement
-        return AuthResponseDto.builder().jwt("TOKEN").build();
+        return AuthResponse.builder().jwt("TOKEN").build();
     }
 
     @Override
-    public AuthResponseDto login(LoginRequestDto request) {
+    public AuthResponse login(LoginRequest request) {
         // todo: implement
-        return AuthResponseDto.builder().jwt("TOKEN").build();
+        return AuthResponse.builder().jwt("TOKEN").build();
     }
 }

@@ -1,9 +1,9 @@
 package com.nutricheck.backend.controller;
 
 
-import com.nutricheck.backend.dto.AuthResponseDto;
-import com.nutricheck.backend.dto.LoginRequestDto;
-import com.nutricheck.backend.dto.RegisterRequestDto;
+import com.nutricheck.backend.dto.AuthResponse;
+import com.nutricheck.backend.dto.LoginRequest;
+import com.nutricheck.backend.dto.RegisterRequest;
 import com.nutricheck.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody @Valid RegisterRequestDto request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginRequestDto request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

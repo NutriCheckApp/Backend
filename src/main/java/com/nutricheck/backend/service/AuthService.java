@@ -1,12 +1,12 @@
 package com.nutricheck.backend.service;
 
-import com.nutricheck.backend.dto.AuthResponseDto;
-import com.nutricheck.backend.dto.LoginRequestDto;
-import com.nutricheck.backend.dto.RegisterRequestDto;
+import com.nutricheck.backend.dto.AuthResponse;
+import com.nutricheck.backend.dto.LoginRequest;
+import com.nutricheck.backend.dto.RegisterRequest;
 
 public interface AuthService {
 
-    AuthResponseDto register(RegisterRequestDto request);
+    AuthResponse register(RegisterRequest request);
 
-    AuthResponseDto login(LoginRequestDto request);
+    AuthResponse login(LoginRequest request);
 }
