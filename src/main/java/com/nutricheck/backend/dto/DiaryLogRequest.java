@@ -1,11 +1,14 @@
 package com.nutricheck.backend.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -14,11 +17,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DiaryLogRequest {
 
-    private Long food_id;
-
-    private double intake_amount;
+    @Positive
+    private BigDecimal intake_amount;
 
     private LocalDate intake_date;
 
-     private String meal_type;
+    @NotBlank
+    private String meal_type;
 }

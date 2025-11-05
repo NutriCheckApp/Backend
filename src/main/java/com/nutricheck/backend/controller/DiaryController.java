@@ -2,6 +2,7 @@ package com.nutricheck.backend.controller;
 
 import com.nutricheck.backend.dto.DiaryLogRequest;
 import com.nutricheck.backend.dto.DiaryLogResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class DiaryController {
     }
 
     @PostMapping("/log")
-    public ResponseEntity<DiaryLogResponse> addDiaryLog(@RequestBody DiaryLogRequest request) {
+    public ResponseEntity<DiaryLogResponse> addDiaryLog(@RequestBody @Valid DiaryLogRequest request) {
         // todo: get user from Auth Context
         // todo: call service
         return ResponseEntity.status(HttpStatus.CREATED).body(new DiaryLogResponse());
@@ -35,16 +36,16 @@ public class DiaryController {
 
     @PutMapping("/log/{intake_id}")
     public ResponseEntity<DiaryLogResponse> updateDiaryLog(@PathVariable Long intake_id,
-                                                             @RequestBody DiaryLogRequest request) {
+                                                             @RequestBody @Valid DiaryLogRequest request) {
         // todo: get user from Auth Context
         // todo: call service
         return ResponseEntity.ok(new DiaryLogResponse());
     }
 
     @DeleteMapping("/log/{intake_id}")
-    public ResponseEntity<Void> deleteDiaryEntry(@PathVariable Long intake_id) {
+    public ResponseEntity<Void> deleteDiaryLog(@PathVariable Long intake_id) {
         // todo: get user
         // todo: call service
-         return ResponseEntity.noContent().build();
+         return ResponseEntity.ok().build();
     }
 }
