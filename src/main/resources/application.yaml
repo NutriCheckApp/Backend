@@ -1,3 +1,6 @@
 spring:
   application:
     name: NutriCheckBackend
+server:
+  servlet:
+    context-path: /api/v1
