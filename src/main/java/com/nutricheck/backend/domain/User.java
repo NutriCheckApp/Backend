@@ -1,4 +1,120 @@
 package com.nutricheck.backend.domain;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+
+/**
+ * 사용자 정보 엔티티
+ * User information entity
+ */
+@Entity
+@Table(name = "user_info")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
+
+    /**
+     * 사용자 이름 (로그인 ID)
+     * Username for login
+     */
+    @Column(nullable = false, unique = true, length = 30)
+    private String username;
+
+    /**
+     * 비밀번호 (암호화 저장 권장)
+     * Password (should be encrypted)
+     */
+    @Column(nullable = false)
+    private String password;
+
+    /**
+     * 나이
+     * Age
+     */
+    private Integer age;
+
+    /**
+     * 성별 (M: 남성, F: 여성)
+     * Gender (M: Male, F: Female)
+     */
+    @Column(length = 1)
+    private String gender;
+
+    /**
+     * 키 (cm)
+     * Height in centimeters
+     */
+    private Double height;
+
+    /**
+     * 현재 체중 (kg)
+     * Current weight in kilograms
+     */
+    private Double weight;
+
+    /**
+     * 목표 체중 (kg)
+     * Goal weight in kilograms
+     */
+    @Column(name = "goal_weight")
+    private Double goalWeight;
+
+    /**
+     * 목표 유형 (DIET: 다이어트, GAIN: 증량, MAINTAIN: 유지)
+     * Goal type (DIET, GAIN, MAINTAIN)
+     */
+    @Column(name = "goal_type", length = 20)
+    @Enumerated(EnumType.STRING)
+    private GoalType goalType;
+
+    /**
+     * 활동 수준
+     * Activity level
+     */
+    @Column(name = "activity_level", length = 20)
+    private String activityLevel;
+
+    /**
+     * 기초대사량 (Basal Metabolic Rate)
+     * BMR in kcal
+     */
+    private Double bmr;
+
+    /**
+     * 생성일시
+     * Creation timestamp
+     */
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    /**
+     * 수정일시
+     * Update timestamp
+     */
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    /**
+     * 목표 유형 열거형
+     * Goal type enumeration
+     */
+    public enum GoalType {
+        DIET,      // 다이어트 / Weight loss
+        GAIN,      // 증량 / Weight gain
+        MAINTAIN   // 유지 / Maintain weight
+    }
 }
