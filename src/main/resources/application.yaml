@@ -29,3 +29,8 @@ spring:
 server:
   servlet:
     context-path: /api/v1
+
+nutricheck:
+  jwt:
+    secret: 6AF90C300504AB6601AB24E191603B304C804EA81AC0D6370A92A719B511FC2E6AF90C300504AB6601AB24E191603B30
+    expiration: 8640000
