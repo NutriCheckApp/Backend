@@ -1,11 +1,14 @@
 package com.nutricheck.backend.controller;
 
 
+import com.nutricheck.backend.domain.User;
 import com.nutricheck.backend.dto.ProfileResponse;
 import com.nutricheck.backend.dto.UpdateUserRequest;
+import com.nutricheck.backend.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,19 +16,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProfileController {
 
+    private final ProfileService profileService;
+
     @GetMapping()
-    public ResponseEntity<ProfileResponse> getCurrentUserProfile( ) {
-        // todo: get user from Security Context
-        // todo: call service (current_user)
-        ProfileResponse userResponseDto = new ProfileResponse();
-        return ResponseEntity.ok(userResponseDto);
+    public ResponseEntity<ProfileResponse> getCurrentUserProfile(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(profileService.getProfile(user));
     }
 
     @PutMapping()
-    public ResponseEntity<ProfileResponse> updateCurrentUserProfile(@RequestBody @Valid UpdateUserRequest request) {
-        // todo: update profile info
-        // todo: send updated profile
-        ProfileResponse updatedUser = new ProfileResponse() ;
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<ProfileResponse> updateCurrentUserProfile(Authentication authentication,
+                                                                    @RequestBody @Valid UpdateUserRequest request) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(profileService.updateProfile(user, request));
     }
 }

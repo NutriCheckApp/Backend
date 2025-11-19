@@ -9,6 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,8 +33,8 @@ public class RestExceptionHandler {
                 .message(e.getLocalizedMessage());
 
         if (e instanceof MissingServletRequestParameterException
-//                   || e instanceof UsernameNotFoundException
-//                   || e instanceof BadCredentialsException
+                   || e instanceof UsernameNotFoundException
+                   || e instanceof BadCredentialsException
             || e instanceof HttpMessageNotReadableException
             || e instanceof ConstraintViolationException) {
             return new ResponseEntity<>(error.build(), HttpStatus.NOT_ACCEPTABLE);
