@@ -1,5 +1,6 @@
 package com.nutricheck.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProfileResponse {
 
-    private Long user_id;
-
-    private String name;
+    private String username;
 
     private int age;
 
@@ -25,12 +24,14 @@ public class ProfileResponse {
 
     private BigDecimal height;
 
-    private String activity_level;
+    @JsonProperty("activity_level")
+    private String activityLevel;
 
     private BigDecimal bmr;
 
     private BigDecimal tdee;
 
-    private BigDecimal goal_weight;
+    @JsonProperty("goal_weight")
+    private BigDecimal goalWeight;
 
 }

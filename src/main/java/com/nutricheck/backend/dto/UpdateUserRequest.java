@@ -1,6 +1,7 @@
 
 package com.nutricheck.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class UpdateUserRequest {
 
-    @NotBlank(message = "Name cannot be empty")
+    @NotBlank(message = "Username cannot be empty")
     @Size(max = 50)
-    private String name;
+    private String username;
 
     @Positive( message = "Age must be a positive number")
     private int age;
@@ -31,10 +32,11 @@ public class UpdateUserRequest {
     @Positive(message = "Height must be a positive number")
     private BigDecimal height;
 
+    @JsonProperty("activity_level")
     @NotBlank(message = "Activity level cannot be empty")
-    private String activity_level;
+    private String activityLevel;
 
+    @JsonProperty("goal_weight")
     @Positive(message = "Goal weight must be a positive number")
-    private BigDecimal goal_weight;
-
+    private BigDecimal goalWeight;
 }
