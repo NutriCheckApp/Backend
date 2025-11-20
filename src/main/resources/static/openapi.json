@@ -1,0 +1,722 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "NutriCheck Backend",
+    "description" : "",
+    "version" : "0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080/api/v1",
+    "description" : "Generated server url"
+  } ],
+  "tags" : [ {
+    "name" : "Report",
+    "description" : "영양 분석 리포트 API / Nutritional Analysis Report API"
+  }, {
+    "name" : "Diary",
+    "description" : "식단 기록 API / Diary API"
+  } ],
+  "paths" : {
+    "/profile" : {
+      "get" : {
+        "tags" : [ "profile-controller" ],
+        "operationId" : "getCurrentUserProfile",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "profile-controller" ],
+        "operationId" : "updateCurrentUserProfile",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diary/log/{intake_id}" : {
+      "put" : {
+        "tags" : [ "Diary" ],
+        "summary" : "식단 기록 수정",
+        "description" : "기존 식단 기록을 수정합니다",
+        "operationId" : "updateDiaryLog",
+        "parameters" : [ {
+          "name" : "intake_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DiaryLogRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DiaryLogResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Diary" ],
+        "summary" : "식단 기록 삭제",
+        "description" : "식단 기록을 삭제합니다",
+        "operationId" : "deleteDiaryLog",
+        "parameters" : [ {
+          "name" : "intake_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/report/daily/{date}/regenerate" : {
+      "post" : {
+        "tags" : [ "Report" ],
+        "summary" : "일일 영양 분석 리포트 재생성",
+        "description" : "특정 날짜의 영양 분석 리포트를 강제로 재생성합니다. 기존 데이터는 덮어씌워집니다.",
+        "operationId" : "regenerateDailyReport",
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DailyReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diary/log" : {
+      "post" : {
+        "tags" : [ "Diary" ],
+        "summary" : "식단 기록 추가",
+        "description" : "새로운 식단 기록을 추가합니다",
+        "operationId" : "addDiaryLog",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DiaryLogRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DiaryLogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register" : {
+      "post" : {
+        "tags" : [ "auth-controller" ],
+        "operationId" : "register",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "auth-controller" ],
+        "operationId" : "login",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report/daily/{date}" : {
+      "get" : {
+        "tags" : [ "Report" ],
+        "summary" : "일일 영양 분석 리포트 조회",
+        "description" : "특정 날짜의 영양 분석 리포트를 조회합니다. 없으면 자동으로 생성합니다. (AI 분석 포함)",
+        "operationId" : "getDailyReport",
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DailyReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/food" : {
+      "get" : {
+        "tags" : [ "food-controller" ],
+        "operationId" : "searchFoods",
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/FoodResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/food/{food_id}" : {
+      "get" : {
+        "tags" : [ "food-controller" ],
+        "operationId" : "getFoodById",
+        "parameters" : [ {
+          "name" : "food_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FoodResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diary" : {
+      "get" : {
+        "tags" : [ "Diary" ],
+        "summary" : "날짜별 식단 기록 조회",
+        "description" : "특정 날짜의 식단 기록을 조회합니다",
+        "operationId" : "getDiaryLogByDate",
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DiaryLogResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "UpdateUserRequest" : {
+        "required" : [ "activity_level", "gender", "name" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "maxLength" : 50,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "age" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "weight" : {
+            "type" : "number"
+          },
+          "height" : {
+            "type" : "number"
+          },
+          "activity_level" : {
+            "type" : "string"
+          },
+          "goal_weight" : {
+            "type" : "number"
+          }
+        }
+      },
+      "ProfileResponse" : {
+        "type" : "object",
+        "properties" : {
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "age" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "weight" : {
+            "type" : "number"
+          },
+          "height" : {
+            "type" : "number"
+          },
+          "activity_level" : {
+            "type" : "string"
+          },
+          "bmr" : {
+            "type" : "number"
+          },
+          "tdee" : {
+            "type" : "number"
+          },
+          "goal_weight" : {
+            "type" : "number"
+          }
+        }
+      },
+      "DiaryLogRequest" : {
+        "required" : [ "foodId", "intakeAmount", "mealType" ],
+        "type" : "object",
+        "properties" : {
+          "foodId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "intakeAmount" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "intakeDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "mealType" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DiaryLogResponse" : {
+        "type" : "object",
+        "properties" : {
+          "intakeId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "foodId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "foodName" : {
+            "type" : "string"
+          },
+          "intakeAmount" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "intakeDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "intakeTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "mealType" : {
+            "type" : "string"
+          },
+          "mealTypeDisplayName" : {
+            "type" : "string"
+          },
+          "calories" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "carbohydrate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "protein" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "fat" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "DailyReportResponse" : {
+        "type" : "object",
+        "properties" : {
+          "analysisId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "userId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "analysisDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "totalCalories" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalCarbohydrate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalProtein" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalFat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalSodium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalCholesterol" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalCalcium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqCalories" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqCarbohydrate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqProtein" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqFat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqSodium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqCholesterol" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "reqCalcium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "caloriesStatus" : {
+            "type" : "string"
+          },
+          "carbohydrateStatus" : {
+            "type" : "string"
+          },
+          "proteinStatus" : {
+            "type" : "string"
+          },
+          "fatStatus" : {
+            "type" : "string"
+          },
+          "sodiumStatus" : {
+            "type" : "string"
+          },
+          "cholesterolStatus" : {
+            "type" : "string"
+          },
+          "calciumStatus" : {
+            "type" : "string"
+          },
+          "aiSummary" : {
+            "type" : "string"
+          },
+          "aiRecommendations" : {
+            "type" : "string"
+          }
+        }
+      },
+      "RegisterRequest" : {
+        "required" : [ "age", "gender", "password", "username" ],
+        "type" : "object",
+        "properties" : {
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "age" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "height" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "weight" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "goalWeight" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "goalType" : {
+            "type" : "string"
+          },
+          "activityLevel" : {
+            "type" : "string"
+          }
+        }
+      },
+      "AuthResponse" : {
+        "type" : "object",
+        "properties" : {
+          "jwt" : {
+            "type" : "string"
+          }
+        }
+      },
+      "LoginRequest" : {
+        "required" : [ "email", "password" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      },
+      "FoodResponse" : {
+        "type" : "object",
+        "properties" : {
+          "foodId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "foodName" : {
+            "type" : "string"
+          },
+          "servingSize" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "servingUnit" : {
+            "type" : "string"
+          },
+          "calories" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "carbohydrate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "protein" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "fat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "saturatedFat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "transFat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "unsaturatedFat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "sugar" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "sodium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "cholesterol" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "calcium" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "fiber" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      }
+    }
+  }
+}
