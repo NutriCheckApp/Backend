@@ -122,24 +122,23 @@ public class DataInitializer {
      * 테스트용 샘플 데이터 삽입
      * Initialize sample data for testing
      */
+
+
     @Bean
     public CommandLineRunner initSampleData() {
         return args -> {
+
             if (userRepository.count() == 0) {
                 log.info("Initializing sample data...");
 
                 // 테스트 사용자 생성 / Create test user
                 User testUser = User.builder()
                         .username("testuser")
+                        .name("testusername")
                         .password("password123") // TODO: 실제 환경에서는 암호화 필요 / Should be encrypted in production
+                        .email("test@example.com")
                         .age(25)
                         .gender("M")
-                        .height(175.0)
-                        .weight(70.0)
-                        .goalWeight(65.0)
-                        .goalType(User.GoalType.DIET)
-                        .activityLevel("MODERATE")
-                        .bmr(1650.0)
                         .build();
 
                 userRepository.save(testUser);

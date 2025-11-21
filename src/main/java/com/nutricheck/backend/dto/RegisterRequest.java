@@ -1,6 +1,7 @@
 package com.nutricheck.backend.dto;
 
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -24,11 +25,26 @@ public class RegisterRequest {
     private String username;
 
     /**
+     * 사용자 실명
+     * User's real name
+     */
+    @NotBlank(message = "Name required")
+    private String name;
+
+    /**
      * 비밀번호
      * Password
      */
     @NotBlank(message = "Password required")
     private String password;
+
+    /**
+     * 이메일
+     * Email address
+     */
+    @NotBlank(message = "Email required")
+    @Email(message = "Invalid email format")
+    private String email;
 
     /**
      * 나이

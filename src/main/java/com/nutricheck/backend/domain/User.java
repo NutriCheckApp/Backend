@@ -38,11 +38,25 @@ public class User implements UserDetails {
     private String username;
 
     /**
+     * 사용자 실명
+     * User's real name
+     */
+    @Column(nullable = false, length = 50)
+    private String name;
+
+     /**
      * 비밀번호 (암호화 저장 권장)
      * Password (should be encrypted)
      */
     @Column(nullable = false)
     private String password;
+
+    /**
+     * 이메일
+     * Email address
+     */
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
 
     /**
      * 나이
@@ -96,6 +110,12 @@ public class User implements UserDetails {
      * BMR in kcal
      */
     private Double bmr;
+
+    /**
+     * 활동대사량 (Total Daily Energy Expenditure)
+     * TDEE in kcal
+     */
+    private Double tdee;
 
     /**
      * 생성일시

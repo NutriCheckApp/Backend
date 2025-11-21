@@ -1,18 +1,14 @@
 package com.nutricheck.backend.controller;
 
 
-import com.nutricheck.backend.dto.AuthResponse;
-import com.nutricheck.backend.dto.LoginRequest;
-import com.nutricheck.backend.dto.RegisterRequest;
+import com.nutricheck.backend.dto.*;
 import com.nutricheck.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -31,5 +27,25 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @GetMapping("/check-username")
+    public ResponseEntity<CheckUsernameResponse> checkUsername(@RequestParam String username) {
+        return ResponseEntity.ok(authService.checkUsername(username));
+    }
+
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<SendVerificationCodeResponse> sendVerificationCode(@RequestBody @Valid SendVerificationCodeRequest request) {
+        return ResponseEntity.ok(authService.sendVerificationCode(request));
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<VerifyCodeResponse> verifyCode(@RequestBody @Valid VerifyCodeRequest request) {
+        return ResponseEntity.ok(authService.verifyCode(request));
+    }
+
+    @PostMapping("/update-userinfo")
+    public ResponseEntity<UpdateUserMetricsResponse> updateUserMetrics(@RequestBody @Valid UpdateUserMetricsRequest request) {
+        return ResponseEntity.ok(authService.updateUserMetrics(request));
     }
 }
