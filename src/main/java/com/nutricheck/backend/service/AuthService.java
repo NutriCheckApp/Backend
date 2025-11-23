@@ -13,6 +13,4 @@ public interface AuthService {
     SendVerificationCodeResponse sendVerificationCode(SendVerificationCodeRequest request);
 
     VerifyCodeResponse verifyCode(VerifyCodeRequest request);
-
-    UpdateUserMetricsResponse updateUserMetrics(UpdateUserMetricsRequest request);
 }
