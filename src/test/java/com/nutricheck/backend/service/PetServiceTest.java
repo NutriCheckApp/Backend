@@ -1,5 +1,6 @@
 package com.nutricheck.backend.service;
 
+import com.nutricheck.backend.domain.Gender;
 import com.nutricheck.backend.domain.Pet;
 import com.nutricheck.backend.domain.User;
 import com.nutricheck.backend.dto.PetInfoResponse;
@@ -26,7 +27,9 @@ class PetServiceTest {
     private final PetRegisterRequest petRegisterRequest = PetRegisterRequest.builder()
             .petName("DogName")
             .petBreed("Beagle")
-            .petAge(2)
+            .petAge(24)
+            .petWeight(10.0)
+            .petGender(Gender.NEUTERED_MALE)
             .build();
 
     @Autowired
@@ -81,7 +84,9 @@ class PetServiceTest {
             PetRegisterRequest newPetRegisterRequest = PetRegisterRequest.builder()
                     .petName("DogName" + i)
                     .petBreed("Beagle")
-                    .petAge(2)
+                    .petAge(24)
+                    .petWeight(10.0)
+                    .petGender(Gender.NEUTERED_MALE)
                     .build();
             petService.registerPet(testUser, newPetRegisterRequest);
         }
@@ -110,7 +115,9 @@ class PetServiceTest {
             PetRegisterRequest newPetRegisterRequest = PetRegisterRequest.builder()
                     .petName("DogName" + i)
                     .petBreed("Beagle")
-                    .petAge(2)
+                    .petAge(24)
+                    .petWeight(10.0)
+                    .petGender(Gender.NEUTERED_MALE)
                     .build();
             petService.registerPet(testUser, newPetRegisterRequest);
         }
@@ -138,7 +145,9 @@ class PetServiceTest {
             PetRegisterRequest newPetRegisterRequest = PetRegisterRequest.builder()
                     .petName("DogName" + i)
                     .petBreed("Beagle")
-                    .petAge(2)
+                    .petAge(24)
+                    .petWeight(10.0)
+                    .petGender(Gender.NEUTERED_MALE)
                     .build();
             // register for user 1
             petService.registerPet(testUser, newPetRegisterRequest);
@@ -152,8 +161,10 @@ class PetServiceTest {
     void updatePet() {
         PetUpdateRequest petUpdateRequest = PetUpdateRequest.builder()
                 .petName("NEW" + petRegisterRequest.getPetName())
-                .petBreed("NEW" + petRegisterRequest.getPetName())
+                .petBreed("NEW" + petRegisterRequest.getPetBreed())
                 .petAge(petRegisterRequest.getPetAge() + 5)
+                .petWeight(12.0)
+                .petGender(Gender.NEUTERED_MALE)
                 .build();
 
         PetInfoResponse registeredPet = petService.registerPet(testUser, petRegisterRequest);
