@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 50)
     private String name;
 
-     /**
+    /**
      * 비밀번호 (암호화 저장 권장)
      * Password (should be encrypted)
      */
@@ -60,66 +60,13 @@ public class User implements UserDetails {
     private String email;
 
     /**
-     * 나이
-     * Age
+     * 사용자의 반려견 목록
+     * User's pet list
      */
-    private Integer age;
-
-    /**
-     * 성별 (M: 남성, F: 여성)
-     * Gender (M: Male, F: Female)
-     */
-    @Column(length = 1)
-    private String gender;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pet> pets = new ArrayList<Pet>();
-
-    /**
-     * 키 (cm)
-     * Height in centimeters
-     */
-    private Double height;
-
-    /**
-     * 현재 체중 (kg)
-     * Current weight in kilograms
-     */
-    private Double weight;
-
-    /**
-     * 목표 체중 (kg)
-     * Goal weight in kilograms
-     */
-    @Column(name = "goal_weight")
-    private Double goalWeight;
-
-    /**
-     * 목표 유형 (DIET: 다이어트, GAIN: 증량, MAINTAIN: 유지)
-     * Goal type (DIET, GAIN, MAINTAIN)
-     */
-    @Column(name = "goal_type", length = 20)
-    @Enumerated(EnumType.STRING)
-    private GoalType goalType;
-
-    /**
-     * 활동 수준
-     * Activity level
-     */
-    @Column(name = "activity_level", length = 20)
-    private String activityLevel;
-
-    /**
-     * 기초대사량 (Basal Metabolic Rate)
-     * BMR in kcal
-     */
-    private Double bmr;
-
-    /**
-     * 활동대사량 (Total Daily Energy Expenditure)
-     * TDEE in kcal
-     */
-    private Double tdee;
+    @Builder.Default
+    @ToString.Exclude
+    private List<Pet> pets = new ArrayList<>();
 
     /**
      * 생성일시
@@ -160,15 +107,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
-    }
-
-    /**
-     * 목표 유형 열거형
-     * Goal type enumeration
-     */
-    public enum GoalType {
-        DIET,      // 다이어트 / Weight loss
-        GAIN,      // 증량 / Weight gain
-        MAINTAIN   // 유지 / Maintain weight
     }
 }

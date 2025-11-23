@@ -1,42 +1,37 @@
-
 package com.nutricheck.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
+/**
+ * 사용자 정보 수정 요청 DTO
+ * User profile update request DTO
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserRequest {
 
-    @NotBlank(message = "Username cannot be empty")
-    @Size(max = 50)
-    private String username;
+    /**
+     * 사용자 실명
+     * User's real name
+     */
+    @NotBlank(message = "Name cannot be empty")
+    @Size(max = 50, message = "Name must be less than 50 characters")
+    private String name;
 
-    @Positive( message = "Age must be a positive number")
-    private int age;
-
-    @NotBlank(message = "Gender cannot be empty")
-    private String gender;
-
-    @Positive(message = "Weight must be a positive number")
-    private BigDecimal weight;
-
-    @Positive(message = "Height must be a positive number")
-    private BigDecimal height;
-
-    @JsonProperty("activity_level")
-    @NotBlank(message = "Activity level cannot be empty")
-    private String activityLevel;
-
-    @JsonProperty("goal_weight")
-    @Positive(message = "Goal weight must be a positive number")
-    private BigDecimal goalWeight;
+    /**
+     * 이메일
+     * Email address
+     */
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
+    @Size(max = 100, message = "Email must be less than 100 characters")
+    private String email;
 }
