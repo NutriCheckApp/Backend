@@ -5,32 +5,48 @@ import com.nutricheck.backend.dto.ProfileResponse;
 import com.nutricheck.backend.dto.UpdateUserRequest;
 import com.nutricheck.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 사용자 프로필 서비스 구현체
+ * User profile service implementation
+ */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper = new ModelMapper();
-
     @Override
     public ProfileResponse getProfile(User user) {
-        ProfileResponse response = modelMapper.map(user, ProfileResponse.class);
-        return response;
+        return ProfileResponse.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
     }
 
     @Override
+    @Transactional
     public ProfileResponse updateProfile(User user, UpdateUserRequest updateRequest) {
-        if (!updateRequest.getUsername().equals(user.getUsername())
-            && userRepository.findByUsername(updateRequest.getUsername()).isPresent()) {
-            throw new RuntimeException(updateRequest.getUsername() + " already exists");
+        // 이메일 중복 체크 (본인 이메일 제외)
+        if (!updateRequest.getEmail().equals(user.getEmail())
+                && userRepository.findByEmail(updateRequest.getEmail()).isPresent()) {
+            throw new RuntimeException("Email " + updateRequest.getEmail() + " already exists");
         }
-        modelMapper.map(updateRequest, user);
-        User save = userRepository.save(user);
-        ProfileResponse response = modelMapper.map(save, ProfileResponse.class);
-        return response;
+
+        // 사용자 정보 업데이트
+        user.setName(updateRequest.getName());
+        user.setEmail(updateRequest.getEmail());
+
+        User savedUser = userRepository.save(user);
+
+        return ProfileResponse.builder()
+                .username(savedUser.getUsername())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .build();
     }
 }

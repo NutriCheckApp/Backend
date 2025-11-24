@@ -32,8 +32,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final VerificationCodeStorage verificationCodeStorage;
 
-    private final MetricsCalculationService metricsCalculationService;
-
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
@@ -110,52 +108,6 @@ public class AuthServiceImpl implements AuthService {
         boolean isValid = verificationCodeStorage.verifyCode(request.getEmail(), request.getCode());
         return VerifyCodeResponse.builder()
                 .valid(isValid)
-                .build();
-    }
-
-    @Override
-    public UpdateUserMetricsResponse updateUserMetrics(UpdateUserMetricsRequest request) {
-        // 사용자 조회 / Find User
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        // 사용자 정보 업데이트 / Update UserInfo
-        user.setHeight(request.getHeight());
-        user.setWeight(request.getWeight());
-        user.setGoalWeight(request.getGoalWeight());
-        user.setActivityLevel(request.getActivityLevel().name());
-
-        // 목표 유형 자동 설정 / goal_type set automatically
-        if (request.getGoalWeight() != null) {
-            if (request.getGoalWeight() > request.getWeight()) {
-                user.setGoalType(User.GoalType.GAIN);  // 목표체중 > 현재체중 → 증량
-            } else if (request.getGoalWeight().equals(request.getWeight())) {
-                user.setGoalType(User.GoalType.MAINTAIN);  // 목표체중 = 현재체중 → 유지
-            } else {
-                user.setGoalType(User.GoalType.DIET);  // 목표체중 < 현재체중 → 다이어트
-            }
-        }
-
-        // BMR 계산 및 저장 / calculate BMR and save
-        double bmr = metricsCalculationService.calculateBMR(
-                user.getGender(),
-                user.getWeight(),
-                user.getHeight(),
-                user.getAge()
-        );
-        user.setBmr(bmr);
-
-        // TDEE 계산 및 저장 / Calculate TDEE and save
-        double tdee = metricsCalculationService.calculateTDEE(bmr, request.getActivityLevel());
-        user.setTdee(tdee);
-
-        // 사용자 정보 저장 / Save into user table
-        userRepository.save(user);
-
-        return UpdateUserMetricsResponse.builder()
-                .message("건강 정보가 업데이트되었습니다.")
-                .bmr(Math.round(bmr * 100.0) / 100.0) // 소수점 2자리
-                .tdee(Math.round(tdee * 100.0) / 100.0) // 소수점 2자리
                 .build();
     }
 }

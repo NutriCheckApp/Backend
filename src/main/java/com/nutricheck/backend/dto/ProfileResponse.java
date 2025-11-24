@@ -1,37 +1,35 @@
 package com.nutricheck.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
+/**
+ * 사용자 프로필 응답 DTO
+ * User profile response DTO
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfileResponse {
 
+    /**
+     * 사용자 이름 (로그인 ID)
+     * Username for login
+     */
     private String username;
 
-    private int age;
+    /**
+     * 사용자 실명
+     * User's real name
+     */
+    private String name;
 
-    private String gender;
-
-    private BigDecimal weight;
-
-    private BigDecimal height;
-
-    @JsonProperty("activity_level")
-    private String activityLevel;
-
-    private BigDecimal bmr;
-
-    private BigDecimal tdee;
-
-    @JsonProperty("goal_weight")
-    private BigDecimal goalWeight;
-
+    /**
+     * 이메일
+     * Email address
+     */
+    private String email;
 }

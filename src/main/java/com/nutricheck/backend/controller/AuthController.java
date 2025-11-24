@@ -43,9 +43,4 @@ public class AuthController {
     public ResponseEntity<VerifyCodeResponse> verifyCode(@RequestBody @Valid VerifyCodeRequest request) {
         return ResponseEntity.ok(authService.verifyCode(request));
     }
-
-    @PostMapping("/update-userinfo")
-    public ResponseEntity<UpdateUserMetricsResponse> updateUserMetrics(@RequestBody @Valid UpdateUserMetricsRequest request) {
-        return ResponseEntity.ok(authService.updateUserMetrics(request));
-    }
 }

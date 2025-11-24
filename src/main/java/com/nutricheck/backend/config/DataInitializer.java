@@ -17,113 +17,17 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class DataInitializer {
 
-    private final MealTypeRepository mealTypeRepository;
-    private final EssentialRepository essentialRepository;
+//    private final MealTypeRepository mealTypeRepository;
+//    private final EssentialRepository essentialRepository;
     private final UserRepository userRepository;
-    private final FoodRepository foodRepository;
+//    private final FoodRepository foodRepository;
 
-    /**
-     * 식사 시간대 초기 데이터 삽입
-     * Initialize meal type data
-     */
-    @Bean
-    public CommandLineRunner initMealTypes() {
-        return args -> {
-            if (mealTypeRepository.count() == 0) {
-                log.info("Initializing meal types...");
 
-                // 아침 / Breakfast
-                MealType breakfast = MealType.builder()
-                        .mealName("BREAKFAST")
-                        .displayName("아침")
-                        .build();
-
-                // 점심 / Lunch
-                MealType lunch = MealType.builder()
-                        .mealName("LUNCH")
-                        .displayName("점심")
-                        .build();
-
-                // 저녁 / Dinner
-                MealType dinner = MealType.builder()
-                        .mealName("DINNER")
-                        .displayName("저녁")
-                        .build();
-
-                // 간식 / Snack
-                MealType snack = MealType.builder()
-                        .mealName("SNACK")
-                        .displayName("간식")
-                        .build();
-
-                mealTypeRepository.save(breakfast);
-                mealTypeRepository.save(lunch);
-                mealTypeRepository.save(dinner);
-                mealTypeRepository.save(snack);
-
-                log.info("Meal types initialized successfully");
-            }
-        };
-    }
-
-    /**
-     * 권장 영양소 초기 데이터 삽입
-     * Initialize required nutrients data
-     */
-    @Bean
-    public CommandLineRunner initRequiredNutrients() {
-        return args -> {
-            if (essentialRepository.count() == 0) {
-                log.info("Initializing required nutrients...");
-
-                // 20대 남성 / Male in 20s
-                Essential male20s = Essential.builder()
-                        .ageRange("20-29")
-                        .gender("M")
-                        .reqCalories(2500.0)
-                        .reqCarbohydrate(325.0)
-                        .reqProtein(65.0)
-                        .reqFat(55.0)
-                        .reqSaturatedFat(15.0)
-                        .reqTransFat(2.0)
-                        .reqSugar(50.0)
-                        .reqSodium(2000.0)
-                        .reqCholesterol(300.0)
-                        .reqCalcium(800.0)
-                        .reqFiber(25.0)
-                        .build();
-
-                // 20대 여성 / Female in 20s
-                Essential female20s = Essential.builder()
-                        .ageRange("20-29")
-                        .gender("F")
-                        .reqCalories(2000.0)
-                        .reqCarbohydrate(260.0)
-                        .reqProtein(55.0)
-                        .reqFat(45.0)
-                        .reqSaturatedFat(12.0)
-                        .reqTransFat(2.0)
-                        .reqSugar(40.0)
-                        .reqSodium(1500.0)
-                        .reqCholesterol(300.0)
-                        .reqCalcium(800.0)
-                        .reqFiber(20.0)
-                        .build();
-
-                essentialRepository.save(male20s);
-                essentialRepository.save(female20s);
-
-                log.info("Required nutrients initialized successfully");
-            }
-        };
-    }
 
     /**
      * 테스트용 샘플 데이터 삽입
      * Initialize sample data for testing
      */
-
-
     @Bean
     public CommandLineRunner initSampleData() {
         return args -> {
@@ -137,14 +41,13 @@ public class DataInitializer {
                         .name("testusername")
                         .password("password123") // TODO: 실제 환경에서는 암호화 필요 / Should be encrypted in production
                         .email("test@example.com")
-                        .age(25)
-                        .gender("M")
                         .build();
 
                 userRepository.save(testUser);
                 log.info("Test user created: {}", testUser.getUsername());
             }
 
+            /* ToDo: 레시피 데이터 임의로 추가 / Add Receipe Data
             if (foodRepository.count() == 0) {
                 log.info("Initializing sample foods...");
 
@@ -250,7 +153,7 @@ public class DataInitializer {
                 foodRepository.save(egg);
 
                 log.info("Sample foods initialized successfully");
-            }
+            }*/
         };
     }
 }
