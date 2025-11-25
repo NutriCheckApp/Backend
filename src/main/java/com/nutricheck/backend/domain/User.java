@@ -42,7 +42,7 @@ public class User implements UserDetails {
      * 사용자 실명
      * User's real name
      */
-    @Column(nullable = false, length = 50)
+    @Column(/*nullable = false,*/ length = 50)
     private String name;
 
     /**
