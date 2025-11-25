@@ -28,7 +28,7 @@ public class RegisterRequest {
      * 사용자 실명
      * User's real name
      */
-    @NotBlank(message = "Name required")
+//    @NotBlank(message = "Name required")
     private String name;
 
     /**
@@ -50,46 +50,16 @@ public class RegisterRequest {
      * 나이
      * Age
      */
-    @NotNull(message = "Age required")
-    @Positive(message = "Age must be a positive number")
+//    @NotNull(message = "Age required")
+//    @Positive(message = "Age must be a positive number")
     private Integer age;
 
     /**
      * 성별 (M: 남성, F: 여성)
      * Gender (M: Male, F: Female)
      */
-    @NotBlank(message = "Gender required")
+//    @NotBlank(message = "Gender required")
     private String gender;
 
-    /**
-     * 키 (cm)
-     * Height in centimeters
-     */
-    @Positive(message = "Height must be positive")
-    private Double height;
 
-    /**
-     * 현재 체중 (kg)
-     * Current weight in kilograms
-     */
-    @Positive(message = "Weight must be positive")
-    private Double weight;
-
-    /**
-     * 목표 체중 (kg)
-     * Goal weight in kilograms
-     */
-    private Double goalWeight;
-
-    /**
-     * 목표 유형 (DIET, GAIN, MAINTAIN)
-     * Goal type
-     */
-    private String goalType;
-
-    /**
-     * 활동 수준
-     * Activity level
-     */
-    private String activityLevel;
 }

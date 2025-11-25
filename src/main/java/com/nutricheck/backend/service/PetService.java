@@ -44,16 +44,5 @@ public interface PetService {
      */
     void deletePet(User user, Long petId);
 
-    /**
-     * 반려견 하루 권장 칼로리 계산
-     * Calculate daily recommended calories for pet
-     */
-    double calculateDailyCalories(Pet pet);
-
-    /**
-     * 체중, 생애 단계, 활동 수준으로 하루 권장 칼로리 계산
-     * Calculate daily calories by weight, life stage, and activity level
-     */
-    double calculateDailyCalories(double weightKg, PetLifeStage lifeStage, PetActivityLevel activityLevel);
 }
 

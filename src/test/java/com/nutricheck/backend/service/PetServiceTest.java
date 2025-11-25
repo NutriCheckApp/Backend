@@ -52,9 +52,6 @@ class PetServiceTest {
                 .email("pet_test@example.com")
                 .age(30)
                 .gender("M")
-                .height(180.0)
-                .weight(80.0)
-                .goalType("MAINTAIN")
                 .build();
 
         authService.register(userRegisterRequest);
@@ -134,9 +131,6 @@ class PetServiceTest {
                 .email("pet_test2@example.com")
                 .age(30)
                 .gender("M")
-                .height(180.0)
-                .weight(80.0)
-                .goalType("MAINTAIN")
                 .build();
         authService.register(userRegisterRequest2);
         User testUser2 = userRepository.findByUsername(userRegisterRequest2.getUsername()).get();
