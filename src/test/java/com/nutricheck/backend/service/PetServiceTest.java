@@ -47,11 +47,12 @@ class PetServiceTest {
     void setUp() {
         RegisterRequest userRegisterRequest = RegisterRequest.builder()
                 .username("petOwnerTestUser")
-                .name("PetOwnerUser1")
                 .password("password")
                 .email("pet_test@example.com")
-                .age(30)
-                .gender("M")
+                .petWeight(10.0)
+                .pet_age(24)
+                .gender("NEUTERED_MALE")
+                .activity_level("NORMAL")
                 .build();
 
         authService.register(userRegisterRequest);
@@ -126,11 +127,12 @@ class PetServiceTest {
     void getPetsByUserWrongUser() {
         RegisterRequest userRegisterRequest2 = RegisterRequest.builder()
                 .username("petOwnerTestUser2")
-                .name("PetOwnerUser2")
                 .password("password2")
                 .email("pet_test2@example.com")
-                .age(30)
-                .gender("M")
+                .petWeight(8.0)
+                .pet_age(36)
+                .gender("FEMALE")
+                .activity_level("ACTIVE")
                 .build();
         authService.register(userRegisterRequest2);
         User testUser2 = userRepository.findByUsername(userRegisterRequest2.getUsername()).get();
