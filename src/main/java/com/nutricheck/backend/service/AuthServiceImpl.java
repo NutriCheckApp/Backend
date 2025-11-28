@@ -54,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Pet 엔티티 생성
         Pet pet = Pet.builder()
+                .petName("My Pet")  // 기본 이름 (나중에 프로필에서 수정 가능)
                 .petWeight(request.getPetWeight())
                 .petAge(request.getPet_age())
                 .petGender(parseGender(request.getGender()))
