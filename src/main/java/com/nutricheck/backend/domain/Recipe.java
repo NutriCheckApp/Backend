@@ -49,44 +49,27 @@ public class Recipe {
     @Column(name = "calories")
     private Double calories;
 
-    /**
-     * 탄수화물 (g)
-     * Carbohydrate in grams
-     */
-    @Column(name = "carbohydrate")
-    private Double carbohydrate;
 
     /**
-     * 단백질 (g)
-     * Protein in grams
+     * 조단백질 (g)
+     * CrudeProtein in grams
      */
-    @Column(name = "protein")
+    @Column(name = "CrudeProtein")
     private Double protein;
 
     /**
-     * 지방 (g)
-     * Fat in grams
+     * 조지방 (g)
+     * CrudeFat in grams
      */
-    @Column(name = "fat")
+    @Column(name = "CrudeFat")
     private Double fat;
 
     /**
-     * 식이섬유 (g)
-     * Dietary fiber in grams
+     * 조섬유질 (g)
+     * CrudeFiber in grams
      */
-    @Column(name = "fiber")
+    @Column(name = "CrudeFiber")
     private Double fiber;
-
-    /**
-     * 수분 (g)
-     * Moisture in grams
-     */
-    @Column(name = "moisture")
-    private Double moisture;
-
-    // ========================================
-    // 미네랄 / Minerals
-    // ========================================
 
     /**
      * 칼슘 (mg) - 뼈, 치아 건강
@@ -94,52 +77,6 @@ public class Recipe {
      */
     @Column(name = "calcium")
     private Double calcium;
-
-    /**
-     * 인 (mg) - 뼈 건강, 칼슘과 균형 중요
-     * Phosphorus in milligrams - bone health, balance with calcium
-     */
-    @Column(name = "phosphorus")
-    private Double phosphorus;
-
-    /**
-     * 나트륨 (mg) - 전해질 균형
-     * Sodium in milligrams - electrolyte balance
-     */
-    @Column(name = "sodium")
-    private Double sodium;
-
-    /**
-     * 철분 (mg) - 혈액 건강
-     * Iron in milligrams - blood health
-     */
-    @Column(name = "iron")
-    private Double iron;
-
-    /**
-     * 아연 (mg) - 피부, 면역 체계
-     * Zinc in milligrams - skin and immune system
-     */
-    @Column(name = "zinc")
-    private Double zinc;
-
-    // ========================================
-    // 지방산 / Fatty Acids
-    // ========================================
-
-    /**
-     * 오메가3 지방산 (g) - 피부, 털, 관절 건강
-     * Omega-3 fatty acids in grams - skin, coat, joint health
-     */
-    @Column(name = "omega3")
-    private Double omega3;
-
-    /**
-     * 오메가6 지방산 (g) - 피부, 털 건강
-     * Omega-6 fatty acids in grams - skin and coat health
-     */
-    @Column(name = "omega6")
-    private Double omega6;
 
     /**
      * 조리 시간 (분)

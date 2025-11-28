@@ -27,13 +27,21 @@ public class CalculateCalorieServiceImpl implements CalculateCalorieService {
         puppyUnder4.put(PetActivityLevel.VERY_ACTIVE, 3.0); // 어린 퍼피는 과도한 활동 권장하지 않음
         FACTOR_MATRIX.put(PetLifeStage.PUPPY_UNDER_4_MONTHS, puppyUnder4);
 
-        // 퍼피 (4~12개월)
-        Map<PetActivityLevel, Double> puppy4To12 = new EnumMap<>(PetActivityLevel.class);
-        puppy4To12.put(PetActivityLevel.INACTIVE, 1.8);
-        puppy4To12.put(PetActivityLevel.NORMAL, 2.0);
-        puppy4To12.put(PetActivityLevel.ACTIVE, 2.2);
-        puppy4To12.put(PetActivityLevel.VERY_ACTIVE, 2.2);  // 성장기 퍼피는 과도한 활동 제한
-        FACTOR_MATRIX.put(PetLifeStage.PUPPY_4_TO_12_MONTHS, puppy4To12);
+        // 퍼피 (4~12개월, 중성화)
+        Map<PetActivityLevel, Double> puppy4To12Neutered = new EnumMap<>(PetActivityLevel.class);
+        puppy4To12Neutered.put(PetActivityLevel.INACTIVE, 1.5);
+        puppy4To12Neutered.put(PetActivityLevel.NORMAL, 1.6);
+        puppy4To12Neutered.put(PetActivityLevel.ACTIVE, 1.8);
+        puppy4To12Neutered.put(PetActivityLevel.VERY_ACTIVE, 1.8);
+        FACTOR_MATRIX.put(PetLifeStage.PUPPY_4_TO_12_MONTHS_NEUTERED, puppy4To12Neutered);
+
+        // 퍼피 (4~12개월, 미중성화)
+        Map<PetActivityLevel, Double> puppy4To12Intact = new EnumMap<>(PetActivityLevel.class);
+        puppy4To12Intact.put(PetActivityLevel.INACTIVE, 1.8);
+        puppy4To12Intact.put(PetActivityLevel.NORMAL, 2.0);
+        puppy4To12Intact.put(PetActivityLevel.ACTIVE, 2.2);
+        puppy4To12Intact.put(PetActivityLevel.VERY_ACTIVE, 2.2);
+        FACTOR_MATRIX.put(PetLifeStage.PUPPY_4_TO_12_MONTHS_INTACT, puppy4To12Intact);
 
         // 성견 (중성화)
         Map<PetActivityLevel, Double> adultNeutered = new EnumMap<>(PetActivityLevel.class);
@@ -51,13 +59,21 @@ public class CalculateCalorieServiceImpl implements CalculateCalorieService {
         adultIntact.put(PetActivityLevel.VERY_ACTIVE, 2.5);
         FACTOR_MATRIX.put(PetLifeStage.ADULT_INTACT, adultIntact);
 
-        // 시니어
-        Map<PetActivityLevel, Double> senior = new EnumMap<>(PetActivityLevel.class);
-        senior.put(PetActivityLevel.INACTIVE, 1.2);
-        senior.put(PetActivityLevel.NORMAL, 1.4);
-        senior.put(PetActivityLevel.ACTIVE, 1.6);
-        senior.put(PetActivityLevel.VERY_ACTIVE, 1.8);
-        FACTOR_MATRIX.put(PetLifeStage.SENIOR, senior);
+        // 시니어 (중성화)
+        Map<PetActivityLevel, Double> seniorNeutered = new EnumMap<>(PetActivityLevel.class);
+        seniorNeutered.put(PetActivityLevel.INACTIVE, 1.2);
+        seniorNeutered.put(PetActivityLevel.NORMAL, 1.4);
+        seniorNeutered.put(PetActivityLevel.ACTIVE, 1.6);
+        seniorNeutered.put(PetActivityLevel.VERY_ACTIVE, 1.8);
+        FACTOR_MATRIX.put(PetLifeStage.SENIOR_NEUTERED, seniorNeutered);
+
+        // 시니어 (미중성화)
+        Map<PetActivityLevel, Double> seniorIntact = new EnumMap<>(PetActivityLevel.class);
+        seniorIntact.put(PetActivityLevel.INACTIVE, 1.4);
+        seniorIntact.put(PetActivityLevel.NORMAL, 1.6);
+        seniorIntact.put(PetActivityLevel.ACTIVE, 1.8);
+        seniorIntact.put(PetActivityLevel.VERY_ACTIVE, 2.0);
+        FACTOR_MATRIX.put(PetLifeStage.SENIOR_INTACT, seniorIntact);
 
         // 특수 상태 (활동량과 무관한 고정 계수)
         // 임신 후기
@@ -143,16 +159,18 @@ public class CalculateCalorieServiceImpl implements CalculateCalorieService {
      * Get activity factor by life stage and activity level combination
      *
      * <br>
-     * <br>| 생애 단계           | 비활동적 | 보통 | 활동적 | 매우 활동적 |
-     * <br>|---------------------|----------|------|--------|-------------|
-     * <br>| 퍼피(<4개월)        | 2.5      | 3.0  | 3.0    | 3.0         |
-     * <br>| 퍼피(4~12개월)      | 1.8      | 2.0  | 2.2    | 2.2         |
-     * <br>| 성견(중성화)        | 1.4      | 1.6  | 1.8    | 2.0         |
-     * <br>| 성견(미중성화)      | 1.6      | 1.8  | 2.0    | 2.5         |
-     * <br>| 시니어              | 1.2      | 1.4  | 1.6    | 1.8         |
-     * <br>| 임신 후기           | 3.0 (고정)                              |
-     * <br>| 수유 중             | 4.0 (고정)                              |
-     * <br>| 체중 감량           | 1.0 (고정)                              |
+     * <br>| 생애 단계              | 비활동적 | 보통 | 활동적 | 매우 활동적 |
+     * <br>|------------------------|----------|------|--------|-------------|
+     * <br>| 퍼피(<4개월)           | 2.5      | 3.0  | 3.0    | 3.0         |
+     * <br>| 퍼피(4~12개월, 중성화) | 1.5      | 1.6  | 1.8    | 1.8         |
+     * <br>| 퍼피(4~12개월, 미중성화)| 1.8     | 2.0  | 2.2    | 2.2         |
+     * <br>| 성견(중성화)           | 1.4      | 1.6  | 1.8    | 2.0         |
+     * <br>| 성견(미중성화)         | 1.6      | 1.8  | 2.0    | 2.5         |
+     * <br>| 시니어(중성화)         | 1.2      | 1.4  | 1.6    | 1.8         |
+     * <br>| 시니어(미중성화)       | 1.4      | 1.6  | 1.8    | 2.0         |
+     * <br>| 임신 후기              | 3.0 (고정)                              |
+     * <br>| 수유 중                | 4.0 (고정)                              |
+     * <br>| 체중 감량              | 1.0 (고정)                              |
      *
      * @param lifeStage     생애 단계 / Life stage
      * @param activityLevel 활동 수준 / Activity level
@@ -172,38 +190,93 @@ public class CalculateCalorieServiceImpl implements CalculateCalorieService {
         return factor;
     }
 
+    /**
+     * 반려견 정보로부터 생애 단계 추정
+     * Estimate life stage from pet information
+     *
+     * @param pet 반려견 정보 / Pet information
+     * @return 추정된 생애 단계 / Estimated life stage
+     */
     public PetLifeStage estimateLifeStage(Pet pet) {
         Integer ageMonths = pet.getPetAge();
-        Gender gender = pet.getPetGender();
+        boolean isNeutered = isNeutered(pet.getPetGender());
 
-        // 나이 기반 추정 / Age-based estimation
-        if (ageMonths != null) {
-            // 4개월 미만 퍼피 / Puppy under 4 months
-            if (ageMonths < 4) {
-                return PetLifeStage.PUPPY_UNDER_4_MONTHS;
-            }
-            // 4~12개월 퍼피 / Puppy 4-12 months
-            if (ageMonths < 12) {
-                return PetLifeStage.PUPPY_4_TO_12_MONTHS;
-            }
-            // 7세(84개월) 이상 시니어 / Senior 7+ years
-            if (ageMonths >= 84) {
-                return PetLifeStage.SENIOR;
-            }
+        // 나이가 없으면 성견으로 기본 처리 / Default to adult if age not provided
+        if (ageMonths == null) {
+            return isNeutered ? PetLifeStage.ADULT_NEUTERED : PetLifeStage.ADULT_INTACT;
         }
 
-        // 성별 기반 추정 (성견) / Gender-based estimation (adult)
-        if (gender != null) {
-            // 중성화 여부에 따라 / Based on neutering status
-            if (gender == Gender.NEUTERED_MALE || gender == Gender.SPAYED_FEMALE) {
-                return PetLifeStage.ADULT_NEUTERED;
-            } else {
-                return PetLifeStage.ADULT_INTACT;
-            }
+        // 4개월 미만 퍼피 (중성화 구분 없음) / Puppy under 4 months (no neutering distinction)
+        if (ageMonths < 4) {
+            return PetLifeStage.PUPPY_UNDER_4_MONTHS;
         }
 
-        // 기본값: 중성화 성견 / Default: neutered adult
-        return PetLifeStage.ADULT_NEUTERED;
+        // 4~12개월 퍼피 (중성화 구분) / Puppy 4-12 months (neutering-based)
+        if (ageMonths < 12) {
+            return isNeutered ? PetLifeStage.PUPPY_4_TO_12_MONTHS_NEUTERED
+                    : PetLifeStage.PUPPY_4_TO_12_MONTHS_INTACT;
+        }
+
+        // 7세(84개월) 이상 시니어 (중성화 구분) / Senior 7+ years (neutering-based)
+        if (ageMonths >= 84) {
+            return isNeutered ? PetLifeStage.SENIOR_NEUTERED : PetLifeStage.SENIOR_INTACT;
+        }
+
+        // 1~7세 성견 (중성화 구분) / Adult 1-7 years (neutering-based)
+        return isNeutered ? PetLifeStage.ADULT_NEUTERED : PetLifeStage.ADULT_INTACT;
+    }
+
+    /**
+     * 중성화 여부 판단
+     * Check if pet is neutered
+     *
+     * @param gender 성별 / Gender
+     * @return 중성화 여부 / Whether neutered
+     */
+    private boolean isNeutered(Gender gender) {
+        return gender == Gender.NEUTERED_MALE || gender == Gender.SPAYED_FEMALE;
+    }
+
+    //---------하루 권장 영양성분 계산(APPO 기준, 임시) / Calculate Daily Recommended Nutrition(APPO, Temporally)-------
+
+    @Override
+    public double calculateDailyProtein(double dailyCalories) {
+        if (dailyCalories <= 0) {
+            throw new IllegalArgumentException("Daily calories must be positive");
+        }
+        // 칼로리의 25%를 단백질로 (1g = 4kcal)
+        // 25% of calories from protein (1g = 4kcal)
+        return Math.round((dailyCalories * 0.25 / 4.0) * 10.0) / 10.0;
+    }
+
+    @Override
+    public double calculateDailyFat(double dailyCalories) {
+        if (dailyCalories <= 0) {
+            throw new IllegalArgumentException("Daily calories must be positive");
+        }
+        // 칼로리의 15%를 지방으로 (1g = 9kcal)
+        // 15% of calories from fat (1g = 9kcal)
+        return Math.round((dailyCalories * 0.15 / 9.0) * 10.0) / 10.0;
+    }
+
+    @Override
+    public double calculateDailyFiber(double dailyCalories) {
+        if (dailyCalories <= 0) {
+            throw new IllegalArgumentException("Daily calories must be positive");
+        }
+        // 칼로리의 3%를 섬유로 (1g = 4kcal)
+        // 3% of calories from fiber (1g = 4kcal)
+        return Math.round((dailyCalories * 0.03 / 4.0) * 10.0) / 10.0;
+    }
+
+    @Override
+    public double calculateDailyCalcium(double weightKg) {
+        if (weightKg <= 0) {
+            throw new IllegalArgumentException("Weight must be positive");
+        }
+        // 체중 kg당 60mg
+        // 60mg per kg of body weight
+        return Math.round(weightKg * 60.0 * 10.0) / 10.0;
     }
 
 }

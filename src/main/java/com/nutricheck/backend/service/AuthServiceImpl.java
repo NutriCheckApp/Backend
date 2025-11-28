@@ -1,5 +1,8 @@
 package com.nutricheck.backend.service;
 
+import com.nutricheck.backend.domain.Gender;
+import com.nutricheck.backend.domain.Pet;
+import com.nutricheck.backend.domain.PetActivityLevel;
 import com.nutricheck.backend.domain.User;
 import com.nutricheck.backend.dto.*;
 import com.nutricheck.backend.repository.UserRepository;
@@ -32,33 +35,105 @@ public class AuthServiceImpl implements AuthService {
 
     private final VerificationCodeStorage verificationCodeStorage;
 
+    private final CalculateCalorieService calculateCalorieService;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         if(userRepository.findByUsername(request.getUsername()).isPresent()){
             throw new RuntimeException("이미 존재하는 ID입니다.");
         }
 
-        if(userRepository.findByEmail(request.getEmail()).isPresent()){
-            throw new RuntimeException("이미 존재하는 이메일입니다.");
-        }
+        // User 엔티티 생성
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .email(request.getEmail())
+                .build();
 
-        User user = modelMapper.map(request, User.class);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Pet 엔티티 생성
+        Pet pet = Pet.builder()
+                .petWeight(request.getPetWeight())
+                .petAge(request.getPet_age())
+                .petGender(parseGender(request.getGender()))
+                .activityLevel(parseActivityLevel(request.getActivity_level()))
+                .user(user)
+                .build();
+
+        // 생애 단계 추정
+        pet.setLifeStage(calculateCalorieService.estimateLifeStage(pet));
+
+        // 하루 권장 칼로리 계산
+        double dailyCalories = calculateCalorieService.calculateDailyCalories(pet);
+        pet.setDailyCalories(dailyCalories);
+
+        // 영양소 계산 (AAFCO 기준, 임시, 사료에서 역추정해서 제공 예정)
+        double dailyProtein = calculateCalorieService.calculateDailyProtein(dailyCalories);
+        double dailyFat = calculateCalorieService.calculateDailyFat(dailyCalories);
+        double dailyFiber = calculateCalorieService.calculateDailyFiber(dailyCalories);
+        double dailyCalcium = calculateCalorieService.calculateDailyCalcium(request.getPetWeight());
+
+        pet.setDailyCrudeProtein(dailyProtein);
+        pet.setDailyCrudeFat(dailyFat);
+        pet.setDailyCrudeFiber(dailyFiber);
+        pet.setDailyCalcium(dailyCalcium);
+
+        // User에 Pet 추가
+        user.getPets().add(pet);
+
+        // User 저장 (cascade로 Pet도 함께 저장됨)
         userRepository.save(user);
 
+        // 인증 처리
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        return AuthResponse.builder()
+
+        // RegisterResponse 반환
+        return RegisterResponse.builder()
                 .jwt(token)
                 .message("회원가입에 성공했습니다.")
                 .username(request.getUsername())
+                .dailyCalories(dailyCalories)
+                .dailyCrudeProtein(dailyProtein)
+                .dailyCrudeFat(dailyFat)
+                .dailyCrudeFibers(dailyFiber)
+                .dailyCalcium(dailyCalcium)
                 .build();
+    }
+
+    /**
+     * Gender 문자열을 Gender enum으로 변환
+     * 기본값: null (estimateLifeStage에서 미중성화로 처리됨)
+     */
+    private Gender parseGender(String gender) {
+        if (gender == null || gender.isBlank()) {
+            return null;
+        }
+        try {
+            return Gender.valueOf(gender.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * ActivityLevel 문자열을 PetActivityLevel enum으로 변환
+     * 기본값: NORMAL (보통)
+     */
+    private PetActivityLevel parseActivityLevel(String activityLevel) {
+        if (activityLevel == null || activityLevel.isBlank()) {
+            return PetActivityLevel.NORMAL;
+        }
+        try {
+            return PetActivityLevel.valueOf(activityLevel.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return PetActivityLevel.NORMAL;
+        }
     }
 
     @Override

@@ -19,10 +19,16 @@ public enum PetLifeStage {
     PUPPY_UNDER_4_MONTHS("퍼피 (4개월 미만)"),
 
     /**
-     * 퍼피 (4~12개월)
-     * Puppy (4-12 months)
+     * 퍼피 (4~12개월, 중성화)
+     * Puppy (4-12 months, neutered)
      */
-    PUPPY_4_TO_12_MONTHS("퍼피 (4~12개월)"),
+    PUPPY_4_TO_12_MONTHS_NEUTERED("퍼피 (4~12개월, 중성화)"),
+
+    /**
+     * 퍼피 (4~12개월, 미중성화)
+     * Puppy (4-12 months, intact)
+     */
+    PUPPY_4_TO_12_MONTHS_INTACT("퍼피 (4~12개월, 미중성화)"),
 
     /**
      * 성견 (중성화)
@@ -37,10 +43,16 @@ public enum PetLifeStage {
     ADULT_INTACT("성견 (미중성화)"),
 
     /**
-     * 시니어 (7세 이상)
-     * Senior (7+ years)
+     * 시니어 (7세 이상, 중성화)
+     * Senior (7+ years, neutered)
      */
-    SENIOR("시니어"),
+    SENIOR_NEUTERED("시니어 (중성화)"),
+
+    /**
+     * 시니어 (7세 이상, 미중성화)
+     * Senior (7+ years, intact)
+     */
+    SENIOR_INTACT("시니어 (미중성화)"),
 
     /**
      * 임신 후기
