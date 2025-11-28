@@ -29,20 +29,20 @@ public class Pet {
 
     /**
      * 반려견 이름
-     * Pet name
+     * Pet name / (선택) Optional Column
      */
     @Column(name = "pet_name", nullable = false, length = 50)
     private String petName;
 
     /**
-     * 반려견 품종
+     * 반려견 품종 / (선택) Optional Column
      * Pet breed
      */
     @Column(name = "pet_breed", length = 50)
     private String petBreed;
 
     /**
-     * 반려견 크기 (소형, 중형, 대형)
+     * 반려견 크기 (소형, 중형, 대형) / (선택) Optional Column
      * Pet size (small, medium, large)
      */
     @Column(name = "pet_size", length = 20)
@@ -95,6 +95,34 @@ public class Pet {
      */
     @Column(name = "daily_calories")
     private Double dailyCalories;
+
+    /**
+     * 하루 권장 조단백질량(g)
+     * Daily recommended Crude Protein(g)
+     */
+    @Column(name = "daily_CrudeProtein")
+    private Double dailyCrudeProtein;
+
+    /**
+     * 하루 권장 조지방량(g)
+     * Daily recommended Crude Fat(g)
+     */
+    @Column(name = "daily_CrudeFat")
+    private Double dailyCrudeFat;
+
+    /**
+     * 하루 권장 조섬유량(mg)
+     * Daily recommended Crude Fiber(mg)
+     */
+    @Column(name = "daily_CrudeFiber")
+    private Double dailyCrudeFiber;
+
+    /**
+     * 하루 권장 칼슘량(g)
+     * Daily recommended daily_Calcium(g)
+     */
+    @Column(name = "daily_Calcium")
+    private Double dailyCalcium;
 
     /**
      * 소유자 (사용자)

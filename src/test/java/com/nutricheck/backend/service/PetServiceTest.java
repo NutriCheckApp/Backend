@@ -47,11 +47,12 @@ class PetServiceTest {
     void setUp() {
         RegisterRequest userRegisterRequest = RegisterRequest.builder()
                 .username("petOwnerTestUser")
-                .name("PetOwnerUser1")
                 .password("password")
                 .email("pet_test@example.com")
-                .age(30)
-                .gender("M")
+                .petWeight(10.0)
+                .pet_age(24)
+                .gender("NEUTERED_MALE")
+                .activity_level("NORMAL")
                 .build();
 
         authService.register(userRegisterRequest);
@@ -60,13 +61,13 @@ class PetServiceTest {
 
     @Test
     void registerPet() {
-        Assertions.assertEquals(0, petRepository.findAll().size());
-
+        // 회원가입 시 자동으로 Pet 1개가 생성됨 ("My Pet")
+        Assertions.assertEquals(1, petRepository.findAll().size());
 
         PetInfoResponse createdPet = petService.registerPet(testUser, petRegisterRequest);
 
         Assertions.assertNotNull(createdPet);
-        Assertions.assertEquals(1, petRepository.findAll().size());
+        Assertions.assertEquals(2, petRepository.findAll().size());
         Assertions.assertEquals(petRegisterRequest.getPetName(), createdPet.getPetName());
         Assertions.assertEquals(petRegisterRequest.getPetName(), createdPet.getPetName());
 //        Assertions.assertEquals(testUser.getUsername(), createdPet.getGetOwnerUsername());
@@ -74,8 +75,8 @@ class PetServiceTest {
 
     @Test
     void registerManyPet() {
-        Assertions.assertEquals(0, petRepository.findAll().size());
-
+        // 회원가입 시 자동으로 Pet 1개가 생성됨 ("My Pet")
+        Assertions.assertEquals(1, petRepository.findAll().size());
 
         for (int i = 0; i < 10; i++) {
             PetRegisterRequest newPetRegisterRequest = PetRegisterRequest.builder()
@@ -88,7 +89,7 @@ class PetServiceTest {
             petService.registerPet(testUser, newPetRegisterRequest);
         }
 
-        Assertions.assertEquals(10, petRepository.findAll().size());
+        Assertions.assertEquals(11, petRepository.findAll().size());
     }
 
 
@@ -119,18 +120,20 @@ class PetServiceTest {
             petService.registerPet(testUser, newPetRegisterRequest);
         }
         List<PetInfoResponse> pets = petService.getPetsByUser(testUser);
-        Assertions.assertEquals(10, pets.size());
+        // 회원가입 시 생성된 Pet 1개 + 추가로 등록한 Pet 10개 = 11개
+        Assertions.assertEquals(11, pets.size());
     }
 
     @Test
     void getPetsByUserWrongUser() {
         RegisterRequest userRegisterRequest2 = RegisterRequest.builder()
                 .username("petOwnerTestUser2")
-                .name("PetOwnerUser2")
                 .password("password2")
                 .email("pet_test2@example.com")
-                .age(30)
-                .gender("M")
+                .petWeight(8.0)
+                .pet_age(36)
+                .gender("FEMALE")
+                .activity_level("ACTIVE")
                 .build();
         authService.register(userRegisterRequest2);
         User testUser2 = userRepository.findByUsername(userRegisterRequest2.getUsername()).get();
@@ -148,7 +151,8 @@ class PetServiceTest {
         }
         // request for user 2
         List<PetInfoResponse> pets = petService.getPetsByUser(testUser2);
-        Assertions.assertEquals(0, pets.size());
+        // testUser2도 회원가입 시 Pet 1개가 자동 생성됨 ("My Pet")
+        Assertions.assertEquals(1, pets.size());
     }
 
     @Test

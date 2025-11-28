@@ -4,7 +4,7 @@ import com.nutricheck.backend.dto.*;
 
 public interface AuthService {
 
-    AuthResponse register(RegisterRequest request);
+    RegisterResponse register(RegisterRequest request);
 
     AuthResponse login(LoginRequest request);
 
