@@ -2,25 +2,22 @@ spring:
   application:
     name: NutriCheckBackend
 
-  # JPA 설정 / JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: update  # 애플리케이션 시작 시 테이블 자동 생성/수정 / Auto-create/update tables on startup
-    show-sql: true  # SQL 쿼리 콘솔 출력 / Show SQL queries in console
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        format_sql: true  # SQL 포맷팅 / Format SQL queries
+        format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
-    open-in-view: false  # OSIV 비활성화 (성능 최적화) / Disable OSIV for performance
+    open-in-view: false
 
-  # H2 데이터베이스 설정 / H2 Database Configuration
   datasource:
-    url: jdbc:h2:mem:nutricheck  # 인메모리 데이터베이스 / In-memory database
+    url: jdbc:h2:mem:nutricheck
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
-  # H2 콘솔 활성화 (개발용) / Enable H2 console for development
   h2:
     console:
       enabled: true
@@ -32,5 +29,8 @@ server:
 
 nutricheck:
   jwt:
-    secret: 6AF90C300504AB6601AB24E191603B304C804EA81AC0D6370A92A719B511FC2E6AF90C300504AB6601AB24E191603B30
+    secret: 6AF90...
     expiration: 8640000
+
+calendar:
+  test-mode: true

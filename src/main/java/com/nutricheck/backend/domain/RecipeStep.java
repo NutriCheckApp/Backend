@@ -51,7 +51,7 @@ public class RecipeStep {
      */
     @Column(name = "image_url", length = 500)
     private String imageUrl;
-
+as
     /**
      * 예상 소요 시간 (분)
      * Estimated time in minutes
