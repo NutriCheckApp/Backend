@@ -1,6 +1,7 @@
 package com.nutricheck.backend.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +46,7 @@ public class RegisterRequest {
      */
     @NotNull(message = "Pet Weight(kg) required")
     @Positive(message = "Pet Weight(kg) must be a positive number")
+    @JsonProperty("pet_weight")
     private Double petWeight;
 
 
