@@ -5,11 +5,20 @@ import com.nutricheck.backend.dto.calendar.CalendarEntryRequest;
 import com.nutricheck.backend.dto.calendar.CalendarEntryResponse;
 import com.nutricheck.backend.repository.UserRepository;
 import com.nutricheck.backend.service.CalendarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
+@Slf4j
 @RestController
 @RequestMapping("/calendar")
 @RequiredArgsConstructor
@@ -41,19 +50,35 @@ public class CalendarController {
     @GetMapping
     public CalendarEntryResponse getEntry(
             @AuthenticationPrincipal User user,
-            @RequestParam("date") String date
+            @RequestParam("date") @DateTimeFormat(pattern = "YYYY-MM-DD") LocalDate date
     ) {
         User resolved = resolveUser(user);
         return calendarService.getEntry(resolved, date);
     }
 
-    // 저장/수정
-    @PostMapping
-    public CalendarEntryResponse saveEntry(
+    @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CalendarEntryResponse> uploadPhoto(
+            @Valid @ModelAttribute CalendarEntryRequest request,
             @AuthenticationPrincipal User user,
-            @RequestBody CalendarEntryRequest request
-    ) {
-        User resolved = resolveUser(user);
-        return calendarService.saveOrUpdateEntry(resolved, request);
+            @RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        log.info(file.toString());
+        log.info(request.toString());
+
+        CalendarEntryResponse calendarEntryResponse = calendarService.saveImage(user, file, request);
+        return ResponseEntity.ok(calendarEntryResponse);
     }
+
+//    // 저장/수정
+//    @PostMapping
+//    public CalendarEntryResponse saveEntry(
+//            @AuthenticationPrincipal User user,
+//            @RequestBody CalendarEntryRequest request
+//    ) {
+//        User resolved = resolveUser(user);
+//        return calendarService.saveOrUpdateEntry(resolved, request);
+//    }
 }
