@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/webjars/**",
-            "/h2-console/**"
+            "/h2-console/**",          // context-path 제거된 경로
+            "/api/v1/h2-console/**"    // 혹시 모를 경우 대비해서 context-path 포함 경로도 허용
     };
     private final JWTAuthenticationFilter jwtRequestFilter;
     private final JwtAuthEntryPoint authEntryPoint;
@@ -67,9 +68,10 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("auth/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers(WHITELIST).permitAll()
 //                        .anyRequest().permitAll()
+                                .requestMatchers("/calendar/**").permitAll() // calendar test용
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
