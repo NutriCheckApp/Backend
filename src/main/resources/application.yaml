@@ -22,6 +22,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  servlet:
+    multipart:
+          max-file-size: 10MB
+          max-request-size: 10MB
 
 server:
   servlet:
@@ -32,6 +36,9 @@ nutricheck:
   jwt:
     secret: c9f2b57a978321cc6cfd84d2ec7bb6f87df0541bf738e34d819bc0efaa48f0a8
     expiration: 8640000
+  image:
+    save-path: C:\Users\mizar\Desktop\folder
+    isRelative: false
 
 calendar:
   test-mode: true

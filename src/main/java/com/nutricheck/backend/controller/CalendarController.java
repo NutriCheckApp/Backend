@@ -61,13 +61,9 @@ public class CalendarController {
             @Valid @ModelAttribute CalendarEntryRequest request,
             @AuthenticationPrincipal User user,
             @RequestParam("file") MultipartFile file) {
-
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        log.info(file.toString());
-        log.info(request.toString());
-
         CalendarEntryResponse calendarEntryResponse = calendarService.saveImage(user, file, request);
         return ResponseEntity.ok(calendarEntryResponse);
     }
