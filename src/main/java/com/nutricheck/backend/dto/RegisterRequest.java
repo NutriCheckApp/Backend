@@ -80,7 +80,7 @@ public class RegisterRequest {
      * Pet activity_level(INACTIVE: 비활동적, NORMAL: 보통, ACTIVE: 활동적, VERY_ACTIVE: 매우 활동적
      * Default: NORMAL
      */
-//    @NotBlank(message = "Pet Gender required")
+    @NotBlank(message = "Pet Gender required")
     private String activity_level;
 
 

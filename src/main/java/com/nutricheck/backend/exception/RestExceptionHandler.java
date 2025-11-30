@@ -35,11 +35,7 @@ public class RestExceptionHandler {
         if (e instanceof UsernameNotFoundException
             || e instanceof BadCredentialsException) {
             return new ResponseEntity<>(error.build(), HttpStatus.UNAUTHORIZED);
-        }
-
-        if (e instanceof MissingServletRequestParameterException
-                   || e instanceof UsernameNotFoundException
-                   || e instanceof BadCredentialsException
+        } else if (e instanceof MissingServletRequestParameterException
             || e instanceof HttpMessageNotReadableException
             || e instanceof ConstraintViolationException) {
             return new ResponseEntity<>(error.build(), HttpStatus.NOT_ACCEPTABLE);
@@ -49,7 +45,8 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDto> MethodArgumentNotValidExceptionHandler(HttpServletRequest req, MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorDto> MethodArgumentNotValidExceptionHandler(HttpServletRequest req,
+                                                                           MethodArgumentNotValidException ex) {
         List<String> missingParams = ex
                 .getBindingResult()
                 .getFieldErrors().stream()

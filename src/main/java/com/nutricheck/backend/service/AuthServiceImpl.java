@@ -8,7 +8,6 @@ import com.nutricheck.backend.dto.*;
 import com.nutricheck.backend.repository.UserRepository;
 import com.nutricheck.backend.security.jwt.JwtGenerator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -112,14 +111,7 @@ public class AuthServiceImpl implements AuthService {
      * 기본값: null (estimateLifeStage에서 미중성화로 처리됨)
      */
     private Gender parseGender(String gender) {
-        if (gender == null || gender.isBlank()) {
-            return null;
-        }
-        try {
-            return Gender.valueOf(gender.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        return Gender.getGender(gender).orElse(null);
     }
 
     /**
