@@ -40,8 +40,11 @@ public class RecipeController {
      * }
      */
     @PostMapping("/detail")
-    public RecipeDetailResponse getRecipeDetail(@RequestBody RecipeDetailRequest request) {
-        return recipeService.getRecipeDetail(request.getRecipeId());
+    public RecipeDetailResponse getRecipeDetail(@RequestHeader String host,
+                                                @RequestBody RecipeDetailRequest request) {
+        RecipeDetailResponse recipeDetail = recipeService.getRecipeDetail(request.getRecipeId());
+        recipeDetail.setImageUrl("http://" + host + recipeDetail.getImageUrl());
+        return recipeDetail;
     }
 
     /**
@@ -51,9 +54,8 @@ public class RecipeController {
     @GetMapping("/{recipeId}")
     public RecipeDetailResponse getRecipeDetailByPath(@RequestHeader String host,
                                                       @PathVariable Long recipeId) {
-        log.info(host);
         RecipeDetailResponse recipeDetail = recipeService.getRecipeDetail(recipeId);
-        recipeDetail.setImageUrl("http://" + host + "/" + recipeDetail.getImageUrl());
+        recipeDetail.setImageUrl("http://" + host + recipeDetail.getImageUrl());
         return recipeDetail;
     }
 }
