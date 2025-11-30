@@ -72,6 +72,9 @@ public class SecurityConfig {
                                 .requestMatchers(WHITELIST).permitAll()
 //                        .anyRequest().permitAll()
                                 .requestMatchers("/calendar/**").permitAll() // calendar test용
+                                .requestMatchers("/recipes/**").permitAll()
+                                .requestMatchers("/pet/**").permitAll()
+                                .requestMatchers("/profile/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
