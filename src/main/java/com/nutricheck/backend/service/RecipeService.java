@@ -6,6 +6,7 @@ import com.nutricheck.backend.dto.recipe.*;
 import com.nutricheck.backend.repository.RecipeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import java.util.stream.Collectors;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     /**
      * 메인 화면용 레시피 리스트 (최대 12개)
@@ -42,7 +46,10 @@ public class RecipeService {
     public RecipeDetailResponse getRecipeDetail(Long recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new EntityNotFoundException("레시피를 찾을 수 없습니다. id=" + recipeId));
-
+        //
+        if (recipe.getImageUrl() == null) {
+            recipe.setImageUrl(contextPath + "/images/recipe_" + recipeId + ".png"); // todo: fix later
+        }
         return toDetailResponse(recipe);
     }
 

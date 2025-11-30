@@ -5,10 +5,12 @@ import com.nutricheck.backend.dto.recipe.RecipeDetailResponse;
 import com.nutricheck.backend.dto.recipe.RecipeSummaryResponse;
 import com.nutricheck.backend.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("recipes")
 @RequiredArgsConstructor
@@ -47,7 +49,11 @@ public class RecipeController {
      * GET /api/v1/recipes/{recipeId}
      */
     @GetMapping("/{recipeId}")
-    public RecipeDetailResponse getRecipeDetailByPath(@PathVariable Long recipeId) {
-        return recipeService.getRecipeDetail(recipeId);
+    public RecipeDetailResponse getRecipeDetailByPath(@RequestHeader String host,
+                                                      @PathVariable Long recipeId) {
+        log.info(host);
+        RecipeDetailResponse recipeDetail = recipeService.getRecipeDetail(recipeId);
+        recipeDetail.setImageUrl("http://" + host + "/" + recipeDetail.getImageUrl());
+        return recipeDetail;
     }
 }
