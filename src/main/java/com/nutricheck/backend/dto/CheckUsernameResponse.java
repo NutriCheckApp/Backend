@@ -1,10 +1,8 @@
 package com.nutricheck.backend.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 /**
  * Username 중복 체크 응답 DTO
@@ -21,4 +19,23 @@ public class CheckUsernameResponse {
      * Duplicate status (true: exists, false: available)
      */
     private boolean exists;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RecipeStepResponse {
+
+        private Long stepId;
+
+        @JsonProperty("step_number")
+        private Integer stepNumber;
+
+        private String instruction;
+
+        private String imageUrl;
+
+        private Integer estimatedTime;
+    }
 }

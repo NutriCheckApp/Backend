@@ -30,8 +30,8 @@ server:
 
 nutricheck:
   jwt:
-    secret: 6AF90...
+    secret: c9f2b57a978321cc6cfd84d2ec7bb6f87df0541bf738e34d819bc0efaa48f0a8
     expiration: 8640000
 
 calendar:
-  test-mode: true
+  test-mode: false
