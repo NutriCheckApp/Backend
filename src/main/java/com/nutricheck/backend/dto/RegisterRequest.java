@@ -25,13 +25,6 @@ public class RegisterRequest {
     private String username;
 
     /**
-     * 사용자 실명
-     * User's real name
-     */
-    @NotBlank(message = "Name required")
-    private String name;
-
-    /**
      * 비밀번호
      * Password
      */
@@ -47,49 +40,45 @@ public class RegisterRequest {
     private String email;
 
     /**
-     * 나이
-     * Age
+     * 강아지 체중 (kg)
+     * Pet Weight (kg)
      */
-    @NotNull(message = "Age required")
-    @Positive(message = "Age must be a positive number")
-    private Integer age;
+    @NotNull(message = "Pet Weight(kg) required")
+    @Positive(message = "Pet Weight(kg) must be a positive number")
+    private Double petWeight;
+
 
     /**
-     * 성별 (M: 남성, F: 여성)
-     * Gender (M: Male, F: Female)
+     * 강아지 나이 (months)
+     * Pet Age (months)
+     * Default: 12~84 months(ADULT)
      */
-    @NotBlank(message = "Gender required")
+//    @NotNull(message = "Pet Age(months) required")
+    @Positive(message = "Pet Age(months) must be a positive number")
+    private Integer pet_age;
+
+    /**
+     * 강아지 성별(중성화 여부 포함) (Male: 수컷, Female: 암컷, Neutered male: 중성화 수컷, Spayed female: 중성화 암컷)
+     * Pet Gender(Include neutered)
+     * Default: Neutered male(Spayed female)
+     */
+ //   @NotBlank(message = "Pet Gender required")
     private String gender;
 
     /**
-     * 키 (cm)
-     * Height in centimeters
+     * 강아지 활동 수준 ()
+     * Pet activity_level(INACTIVE: 비활동적, NORMAL: 보통, ACTIVE: 활동적, VERY_ACTIVE: 매우 활동적
+     * Default: NORMAL
      */
-    @Positive(message = "Height must be positive")
-    private Double height;
+//    @NotBlank(message = "Pet Gender required")
+    private String activity_level;
 
-    /**
-     * 현재 체중 (kg)
-     * Current weight in kilograms
-     */
-    @Positive(message = "Weight must be positive")
-    private Double weight;
 
-    /**
-     * 목표 체중 (kg)
-     * Goal weight in kilograms
+    /*
+      만약, 사용자가 강아지의 나이와 성별을 모두 입력하지 않았을 경우
+      isNeutered 함수는 false로 처리되어 "미중성화"처리되고,
+      생애단계는 ADULT_INTACT(미중성화 성견)으로 처리됨.
      */
-    private Double goalWeight;
 
-    /**
-     * 목표 유형 (DIET, GAIN, MAINTAIN)
-     * Goal type
-     */
-    private String goalType;
 
-    /**
-     * 활동 수준
-     * Activity level
-     */
-    private String activityLevel;
 }
