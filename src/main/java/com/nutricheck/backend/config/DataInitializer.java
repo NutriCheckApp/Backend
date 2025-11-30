@@ -1,7 +1,9 @@
 package com.nutricheck.backend.config;
 
 import com.nutricheck.backend.domain.*;
+import com.nutricheck.backend.dto.RegisterRequest;
 import com.nutricheck.backend.repository.*;
+import com.nutricheck.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +30,7 @@ public class DataInitializer {
     private final RecipeRepository recipeRepository;
     private final CalendarEntryRepository calendarEntryRepository;
 
+    private final AuthService authService;
 
 
     /**
@@ -43,14 +46,19 @@ public class DataInitializer {
                 log.info("Initializing sample data...");
 
                 // 테스트 사용자 생성 / Create test user
-                User testUser = User.builder()
+                // todo: DELETE LATER!  FOR DEVELOPMENT PURPOSES ONLY !!!!
+                RegisterRequest testUser = RegisterRequest.builder()
                         .username("testuser")
                         .name("testusername")
                         .password("password123") // TODO: 실제 환경에서는 암호화 필요 / Should be encrypted in production
                         .email("test@example.com")
+                        .petWeight(10.0)
+                        .pet_age(10)
+                        .gender("MALE")
+                        .activity_level("NORMAL")
                         .build();
 
-                userRepository.save(testUser);
+                authService.register(testUser);
                 log.info("Test user created: {}", testUser.getUsername());
             }
             User testUser = userRepository.findByUsername("testuser")
