@@ -34,4 +34,4 @@ nutricheck:
     expiration: 8640000
 
 calendar:
-  test-mode: false
+  test-mode: true
