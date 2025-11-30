@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("recipes")
+@RequestMapping("/recipes")
 @RequiredArgsConstructor
 public class RecipeController {
 
