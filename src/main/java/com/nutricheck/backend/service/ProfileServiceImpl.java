@@ -19,12 +19,15 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
 
+    private final PetService petService;
+
     @Override
     public ProfileResponse getProfile(User user) {
         return ProfileResponse.builder()
                 .username(user.getUsername())
                 .name(user.getName())
                 .email(user.getEmail())
+                .pets(petService.getPetsByUser(user))
                 .build();
     }
 

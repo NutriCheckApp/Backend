@@ -32,6 +32,11 @@ public class RestExceptionHandler {
                 .path(req.getContextPath() + req.getServletPath())
                 .message(e.getLocalizedMessage());
 
+        if (e instanceof UsernameNotFoundException
+            || e instanceof BadCredentialsException) {
+            return new ResponseEntity<>(error.build(), HttpStatus.UNAUTHORIZED);
+        }
+
         if (e instanceof MissingServletRequestParameterException
                    || e instanceof UsernameNotFoundException
                    || e instanceof BadCredentialsException

@@ -1,9 +1,12 @@
 package com.nutricheck.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 사용자 프로필 응답 DTO
@@ -32,4 +35,7 @@ public class ProfileResponse {
      * Email address
      */
     private String email;
+
+    @JsonProperty("pet_list")
+    List<PetInfoResponse> pets;
 }

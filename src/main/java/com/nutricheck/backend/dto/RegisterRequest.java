@@ -40,6 +40,13 @@ public class RegisterRequest {
     @Email(message = "Invalid email format")
     private String email;
 
+    @JsonProperty("name")
+    private String name;
+
+
+    @JsonProperty("pet_name")
+    private String petName;
+
     /**
      * 강아지 체중 (kg)
      * Pet Weight (kg)
@@ -55,7 +62,7 @@ public class RegisterRequest {
      * Pet Age (months)
      * Default: 12~84 months(ADULT)
      */
-//    @NotNull(message = "Pet Age(months) required")
+    @NotNull
     @Positive(message = "Pet Age(months) must be a positive number")
     private Integer pet_age;
 
@@ -64,7 +71,8 @@ public class RegisterRequest {
      * Pet Gender(Include neutered)
      * Default: Neutered male(Spayed female)
      */
- //   @NotBlank(message = "Pet Gender required")
+    @NotBlank(message = "Pet Gender required." +
+                        " Available options: Male: 수컷, Female: 암컷, Neutered male: 중성화 수컷, Spayed female: 중성화 암컷")
     private String gender;
 
     /**

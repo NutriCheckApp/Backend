@@ -42,7 +42,7 @@ Request Body:
   "username": "user123",
   "password": "securePassword",
   "email": "user@example.com",
-  "petWeight": 10.5,
+  "pet_weight": 10.5,
   "pet_age": 24,
   "gender": "MALE",
   "activity_level": "NORMAL"
