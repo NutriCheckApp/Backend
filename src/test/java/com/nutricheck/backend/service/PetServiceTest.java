@@ -2,6 +2,7 @@ package com.nutricheck.backend.service;
 
 import com.nutricheck.backend.domain.Gender;
 import com.nutricheck.backend.domain.Pet;
+import com.nutricheck.backend.domain.PetActivityLevel;
 import com.nutricheck.backend.domain.User;
 import com.nutricheck.backend.dto.PetInfoResponse;
 import com.nutricheck.backend.dto.PetRegisterRequest;
@@ -30,6 +31,7 @@ class PetServiceTest {
             .petAge(24)
             .petWeight(10.0)
             .petGender(Gender.NEUTERED_MALE)
+            .activityLevel(PetActivityLevel.VERY_ACTIVE)
             .build();
 
     @Autowired
@@ -61,22 +63,20 @@ class PetServiceTest {
 
     @Test
     void registerPet() {
-        // 회원가입 시 자동으로 Pet 1개가 생성됨 ("My Pet")
-        Assertions.assertEquals(1, petRepository.findAll().size());
-
+        long init_count = petRepository.count();
         PetInfoResponse createdPet = petService.registerPet(testUser, petRegisterRequest);
 
         Assertions.assertNotNull(createdPet);
-        Assertions.assertEquals(2, petRepository.findAll().size());
+        Assertions.assertEquals(init_count + 1, petRepository.findAll().size());
         Assertions.assertEquals(petRegisterRequest.getPetName(), createdPet.getPetName());
-        Assertions.assertEquals(petRegisterRequest.getPetName(), createdPet.getPetName());
-//        Assertions.assertEquals(testUser.getUsername(), createdPet.getGetOwnerUsername());
+        Assertions.assertEquals(petRegisterRequest.getPetAge(), createdPet.getPetAge());
+        Assertions.assertEquals(petRegisterRequest.getActivityLevel(), createdPet.getActivityLevel());
+        Assertions.assertEquals(petRegisterRequest.getPetWeight(), createdPet.getPetWeight());
     }
 
     @Test
     void registerManyPet() {
-        // 회원가입 시 자동으로 Pet 1개가 생성됨 ("My Pet")
-        Assertions.assertEquals(1, petRepository.findAll().size());
+        long init_count = petRepository.count();
 
         for (int i = 0; i < 10; i++) {
             PetRegisterRequest newPetRegisterRequest = PetRegisterRequest.builder()
@@ -89,7 +89,7 @@ class PetServiceTest {
             petService.registerPet(testUser, newPetRegisterRequest);
         }
 
-        Assertions.assertEquals(11, petRepository.findAll().size());
+        Assertions.assertEquals(init_count + 10, petRepository.findAll().size());
     }
 
 
