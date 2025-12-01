@@ -9,4 +9,6 @@ public interface FileSaverService {
     FileMetadata saveFile(String userPrefix, MultipartFile file);
 
     Resource getFile(String fileUrl);
+
+    void deleteFile(String fileUrl);
 }

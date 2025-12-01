@@ -5,7 +5,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -40,5 +40,7 @@ nutricheck:
     save-path: C:\Users\mizar\Desktop\folder
     isRelative: false
 
-calendar:
-  test-mode: true
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG

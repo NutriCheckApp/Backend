@@ -1,6 +1,8 @@
 package com.nutricheck.backend.service;
 
 import com.nutricheck.backend.dto.calendar.FileMetadata;
+import com.nutricheck.backend.exception.exception.DeleteFileException;
+import com.nutricheck.backend.exception.exception.DirectoryCreationException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +38,7 @@ public class ImageSaverService implements FileSaverService {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+            throw new DirectoryCreationException(ex);
         }
     }
 
@@ -49,7 +53,11 @@ public class ImageSaverService implements FileSaverService {
         }
         // check/create user's directory
         if (!Files.exists(this.fileStorageLocation.resolve(userPrefix))) {
-            Files.createDirectory(this.fileStorageLocation.resolve(userPrefix));
+            try {
+                Files.createDirectory(this.fileStorageLocation.resolve(userPrefix));
+            } catch (IOException e) {
+                throw new DirectoryCreationException(e);
+            }
         }
         //
         String filename = UUID.randomUUID() + extension;
@@ -64,20 +72,37 @@ public class ImageSaverService implements FileSaverService {
                 .build();
     }
 
-    @SneakyThrows
     @Override
     public Resource getFile(String fileUrl) {
 
         Path targetLocation = Paths.get(fileUrl);
         log.info(targetLocation.toString());
 
-        Resource resource = new UrlResource(targetLocation.toUri());
+        try {
+            Resource resource = new UrlResource(targetLocation.toUri());
+            // Check if the resource exists and is readable
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new DeleteFileException(fileUrl);
+            }
+        } catch (MalformedURLException e) {
+            throw new DeleteFileException(fileUrl, e);
+        }
+    }
 
-        // Check if the resource exists and is readable
-        if (resource.exists() || resource.isReadable()) {
-            return resource;
-        } else {
-            throw new RuntimeException("File not found or not readable: " + fileUrl);
+    @Override
+    public void deleteFile(String fileUrl) {
+        Path fileToDelete = Paths.get(fileUrl);
+        try {
+            boolean deleted = Files.deleteIfExists(fileToDelete);
+            if (deleted) {
+                log.info("Successfully deleted file: {}", fileToDelete);
+            } else {
+                log.warn("File not found or could not be deleted: {}", fileToDelete);
+            }
+        } catch (IOException e) {
+            throw new DeleteFileException(fileUrl, e);
         }
     }
 }

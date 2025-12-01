@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Long> {
+public interface CalendarRepository extends JpaRepository<CalendarEntry, Long> {
 
     // 특정 유저 + 특정 날짜 기록 하나
     Optional<CalendarEntry> findByUserAndDate(User user, LocalDate date);

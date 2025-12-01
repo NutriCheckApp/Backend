@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.nutricheck.backend.domain.CalendarEntry;
-import com.nutricheck.backend.repository.CalendarEntryRepository;
+import com.nutricheck.backend.repository.CalendarRepository;
 import java.time.LocalDate;
 
 /**
@@ -28,7 +28,7 @@ public class DataInitializer {
     private final UserRepository userRepository;
 //    private final FoodRepository foodRepository;
     private final RecipeRepository recipeRepository;
-    private final CalendarEntryRepository calendarEntryRepository;
+//    private final CalendarRepository calendarRepository;
 
     private final AuthService authService;
 
@@ -70,47 +70,47 @@ public class DataInitializer {
                 log.info("12 recipes initialized successfully");
             }
             // 캘린더 데이터 초기화 / Initialize calendar entries
-            if (calendarEntryRepository.count() == 0) {
-                log.info("Initializing calendar entries...");
-                initializeCalendarEntries(testUser);
-                log.info("3 calendar entries initialized successfully");
-            }
+//            if (calendarRepository.count() == 0) {
+//                log.info("Initializing calendar entries...");
+////                initializeCalendarEntries(testUser);
+//                log.info("3 calendar entries initialized successfully");
+//            }
         };
     }
 
     /**
      * 캘린더 초기 데이터 3개 생성
      */
-    private void initializeCalendarEntries(User user) {
-
-        // 1) 오늘 날짜 예시
-        CalendarEntry entry1 = CalendarEntry.builder()
-                .user(user)
-                .date(LocalDate.of(2025, 11, 30))
-                .memo("닭가슴살 햄버그스테이크(레시피 5) + 간식 1개, 물 충분히 제공")
-                .imageUrl("https://example.com/calendar/2025-11-30-hamburg.jpg")
-                .build();
-
-        // 2) 내일 예시
-        CalendarEntry entry2 = CalendarEntry.builder()
-                .user(user)
-                .date(LocalDate.of(2025, 12, 1))
-                .memo("아침: 단호박빵(레시피 1) / 저녁: 참치 샐러드(레시피 6)")
-                .imageUrl("https://example.com/calendar/2025-12-01-pumpkin-tuna.jpg")
-                .build();
-
-        // 3) 모레 예시
-        CalendarEntry entry3 = CalendarEntry.builder()
-                .user(user)
-                .date(LocalDate.of(2025, 12, 2))
-                .memo("사라다(레시피 11) 소량 급여 후 30분 산책")
-                .imageUrl("https://example.com/calendar/2025-12-02-salada.jpg")
-                .build();
-
-        calendarEntryRepository.save(entry1);
-        calendarEntryRepository.save(entry2);
-        calendarEntryRepository.save(entry3);
-    }
+//    private void initializeCalendarEntries(User user) {
+//
+//        // 1) 오늘 날짜 예시
+//        CalendarEntry entry1 = CalendarEntry.builder()
+//                .user(user)
+//                .date(LocalDate.of(2025, 11, 30))
+//                .memo("닭가슴살 햄버그스테이크(레시피 5) + 간식 1개, 물 충분히 제공")
+//                .imageUrl("https://example.com/calendar/2025-11-30-hamburg.jpg")
+//                .build();
+//
+//        // 2) 내일 예시
+//        CalendarEntry entry2 = CalendarEntry.builder()
+//                .user(user)
+//                .date(LocalDate.of(2025, 12, 1))
+//                .memo("아침: 단호박빵(레시피 1) / 저녁: 참치 샐러드(레시피 6)")
+//                .imageUrl("https://example.com/calendar/2025-12-01-pumpkin-tuna.jpg")
+//                .build();
+//
+//        // 3) 모레 예시
+//        CalendarEntry entry3 = CalendarEntry.builder()
+//                .user(user)
+//                .date(LocalDate.of(2025, 12, 2))
+//                .memo("사라다(레시피 11) 소량 급여 후 30분 산책")
+//                .imageUrl("https://example.com/calendar/2025-12-02-salada.jpg")
+//                .build();
+//
+//        calendarRepository.save(entry1);
+//        calendarRepository.save(entry2);
+//        calendarRepository.save(entry3);
+//    }
 
     /**
      * 12개 레시피 초기화

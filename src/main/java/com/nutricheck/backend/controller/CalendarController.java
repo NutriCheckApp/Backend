@@ -28,13 +28,12 @@ public class CalendarController {
 
     // 특정 날짜 조회
     @GetMapping
-    public CalendarEntryResponse getEntry(
+    public ResponseEntity<CalendarEntryResponse> getEntry(
             @AuthenticationPrincipal User user,
-            @RequestParam("date") @DateTimeFormat(pattern = "YYYY-MM-DD") LocalDate date
-    ) {
+            @RequestParam("date") @DateTimeFormat(pattern = "YYYY-MM-DD") LocalDate date) {
         CalendarEntryResponse entry = calendarService.getEntry(user, date);
         log.info(entry.toString());
-        return entry;
+        return ResponseEntity.ok(entry);
     }
 
     @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -63,5 +62,16 @@ public class CalendarController {
                 .contentType(MediaType.IMAGE_PNG)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+
+    @DeleteMapping("/image/{filename:.+}")
+    public ResponseEntity<CalendarEntryResponse> deleteImage(@AuthenticationPrincipal User user,
+                                            @PathVariable String filename) {
+        log.info("filename.toString()" + filename);
+        log.info("user.toString()" + user.toString());
+
+        CalendarEntryResponse entry  = calendarService.deleteImage(user, filename);
+        return ResponseEntity.ok(entry);
     }
 }

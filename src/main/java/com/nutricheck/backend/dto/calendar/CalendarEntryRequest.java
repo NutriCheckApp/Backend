@@ -1,16 +1,16 @@
 package com.nutricheck.backend.dto.calendar;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
 public class CalendarEntryRequest {
 
     // "2025-11-25" 형식 (YYYY-MM-DD)
