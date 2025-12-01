@@ -15,4 +15,7 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
 
     // 특정 유저 + 날짜 범위 기록들 (예: 한 달치)
     List<CalendarEntry> findAllByUserAndDateBetween(User user, LocalDate start, LocalDate end);
+
+    Optional<CalendarEntry> findByUserAndImageName(User user, String imageName);
+
 }

@@ -4,9 +4,11 @@ import com.nutricheck.backend.domain.CalendarEntry;
 import com.nutricheck.backend.domain.User;
 import com.nutricheck.backend.dto.calendar.CalendarEntryRequest;
 import com.nutricheck.backend.dto.calendar.CalendarEntryResponse;
+import com.nutricheck.backend.dto.calendar.FileMetadata;
 import com.nutricheck.backend.repository.CalendarEntryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +22,7 @@ public class CalendarService {
 
     private final CalendarEntryRepository calendarEntryRepository;
 
-    private final ImageSaverService imageSaverService;
+    private final FileSaverService imageSaverService;
 
     @Transactional(readOnly = true)
     public CalendarEntryResponse getEntry(User user, LocalDate date) {
@@ -29,62 +31,59 @@ public class CalendarService {
                 .orElseThrow(() -> new RuntimeException("Calendar Entry not found."));
 
         return CalendarEntryResponse.builder()
-                .id(entry.getId())
-                .date(entry.getDate().toString())
+                .date(entry.getDate())
                 .memo(entry.getMemo())
-                .imageUrl(entry.getImageUrl())
+                .imageName(entry.getImageName())
                 .build();
     }
-
-//    @Transactional
-//    public CalendarEntryResponse saveOrUpdateEntry(User user, CalendarEntryRequest request) {
-////        LocalDate date = LocalDate.parse(request.getDate());
-//
-//        CalendarEntry entry = calendarEntryRepository
-//                .findByUserAndDate(user, request.getDate())
-//                .orElseGet(() -> CalendarEntry.builder()
-//                        .user(user)
-//                        .date(request.getDate())
-//                        .build());
-//
-//        entry.setMemo(request.getMemo());
-//        entry.setImageUrl(request.getImageUrl());
-//
-//        CalendarEntry saved = calendarEntryRepository.save(entry);
-//
-//        return CalendarEntryResponse.builder()
-//                .id(saved.getId())
-//                .date(saved.getDate().toString())
-//                .memo(saved.getMemo())
-//                .imageUrl(saved.getImageUrl())
-//                .build();
-//    }
 
     @Transactional
     public CalendarEntryResponse saveImage(User user,
                                            MultipartFile file,
                                            CalendarEntryRequest request) {
+        FileMetadata fileMetadata = imageSaverService.saveFile(user.getUsername(), file);
 
-        String imageUrl = imageSaverService.saveImage(user, file);
+//        CalendarEntry entry = CalendarEntry.builder()
+//                .user(user)
+//                .imageUrl(fileMetadata.getFileUrl())
+//                .imageName(fileMetadata.getFileName())
+//                .memo(request.getMemo())
+//                .date(request.getDate())
+//                .build();
 
-        CalendarEntry entry = calendarEntryRepository
+        // todo: check prev photo and if it exists, delete it
+        CalendarEntry calendarEntry = calendarEntryRepository
                 .findByUserAndDate(user, request.getDate())
-                .orElseGet(() -> CalendarEntry.builder()
-                        .user(user)
-                        .imageUrl(imageUrl)
-                        .memo(request.getMemo())
-                        .date(request.getDate())
-                        .build());
+                .orElseGet(CalendarEntry::new);
 
-        CalendarEntry saved = calendarEntryRepository.save(entry);
+        calendarEntry.setUser(user);
+        calendarEntry.setImageName(fileMetadata.getFileName());
+        calendarEntry.setImageUrl(fileMetadata.getFileUrl());
+        calendarEntry.setMemo(request.getMemo());
+        calendarEntry.setDate(request.getDate());
 
-        log.info(saved.toString());
+        CalendarEntry saved = calendarEntryRepository.save(calendarEntry);
+
+        log.info("Saved calendar entry: {}", saved);
 
         return CalendarEntryResponse.builder()
-                .id(saved.getId())
-                .date(saved.getDate().toString())
+                .date(saved.getDate())
                 .memo(saved.getMemo())
-                .imageUrl(saved.getImageUrl())
+                .imageName(saved.getImageName())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public Resource getFileResource(User user, String filename) {
+
+        // get url from db.
+        // even if a photo exists, it will not be accessible if it is not in the database.
+        CalendarEntry oldEntry = calendarEntryRepository
+                .findByUserAndImageName(user, filename)
+                .orElseThrow(() -> new RuntimeException("Calendar Entry not found for a filename: " + filename));
+
+        log.info("Old entry: {}", oldEntry);
+
+        return imageSaverService.getFile(oldEntry.getImageUrl());
     }
 }

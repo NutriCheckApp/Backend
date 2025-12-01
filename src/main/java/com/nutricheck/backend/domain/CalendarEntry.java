@@ -56,6 +56,10 @@ public class CalendarEntry {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+
+    @Column(name = "image_name", length = 500)
+    private String imageName;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
