@@ -6,7 +6,7 @@ import com.nutricheck.backend.dto.calendar.CalendarEntryRequest;
 import com.nutricheck.backend.dto.calendar.CalendarEntryResponse;
 import com.nutricheck.backend.dto.calendar.FileMetadata;
 import com.nutricheck.backend.exception.exception.CalendarEntryNotFoundException;
-import com.nutricheck.backend.exception.exception.ImageNotExistsException;
+import com.nutricheck.backend.exception.exception.InvalidImageUrlException;
 import com.nutricheck.backend.repository.CalendarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +75,27 @@ public class CalendarService {
                 .build();
     }
 
+    @Deprecated
+    @Transactional
+    public void saveOnlyInfo(User user,
+                             FileMetadata fileMetadata,
+                             CalendarEntryRequest request) {
+        CalendarEntry calendarEntry = calendarRepository
+                .findByUserAndDate(user, request.getDate())
+                .orElseGet(CalendarEntry::new);
+
+        // save calendar entry info
+        calendarEntry.setUser(user);
+        calendarEntry.setImageName(fileMetadata.getFileName());
+        calendarEntry.setImageUrl(fileMetadata.getFileUrl());
+        calendarEntry.setMemo(request.getMemo());
+        calendarEntry.setDate(request.getDate());
+
+        CalendarEntry saved = calendarRepository.save(calendarEntry);
+
+        log.info("Saved calendar entry: {}", saved);
+    }
+
     @Transactional(readOnly = true)
     public Resource getFileResource(User user, String imageName) {
 
@@ -87,7 +108,7 @@ public class CalendarService {
         log.info("Old entry: {}", oldEntry);
 
         if (oldEntry.getImageUrl() == null || oldEntry.getImageUrl().isBlank()) {
-            throw new ImageNotExistsException();
+            throw new InvalidImageUrlException();
         }
         return imageSaverService.getFile(oldEntry.getImageUrl());
     }
@@ -103,7 +124,7 @@ public class CalendarService {
 
         log.info("Old entry: {}", oldEntry);
         if (oldEntry.getImageUrl() == null || oldEntry.getImageUrl().isBlank()) {
-            throw new ImageNotExistsException();
+            throw new InvalidImageUrlException();
         }
         imageSaverService.deleteFile(oldEntry.getImageUrl());
 

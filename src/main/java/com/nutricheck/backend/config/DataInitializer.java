@@ -2,16 +2,20 @@ package com.nutricheck.backend.config;
 
 import com.nutricheck.backend.domain.*;
 import com.nutricheck.backend.dto.RegisterRequest;
+import com.nutricheck.backend.dto.calendar.CalendarEntryRequest;
+import com.nutricheck.backend.dto.calendar.FileMetadata;
 import com.nutricheck.backend.repository.*;
 import com.nutricheck.backend.service.AuthService;
+import com.nutricheck.backend.service.CalendarService;
+import com.nutricheck.backend.service.ImageSaverService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.nutricheck.backend.domain.CalendarEntry;
-import com.nutricheck.backend.repository.CalendarRepository;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 /**
@@ -32,6 +36,9 @@ public class DataInitializer {
 
     private final AuthService authService;
 
+    private final CalendarService calendarService;
+
+    private final ImageSaverService imageSaverService;
 
     /**
      * 테스트용 샘플 데이터 삽입
@@ -69,14 +76,29 @@ public class DataInitializer {
                 initializeRecipes();
                 log.info("12 recipes initialized successfully");
             }
+
             // 캘린더 데이터 초기화 / Initialize calendar entries
-//            if (calendarRepository.count() == 0) {
-//                log.info("Initializing calendar entries...");
-////                initializeCalendarEntries(testUser);
-//                log.info("3 calendar entries initialized successfully");
-//            }
+            for (int i = 1; i < 6; i++) {
+                createCalendarEntries(testUser,
+                        LocalDate.now().minusDays(3).plusDays(i), // 2 days in the past, today, 2 days in future
+                        "test_" + i + ".png", // FILE NAME
+                        "Memo " + i);
+            }
         };
     }
+
+    private void createCalendarEntries(User testuser, LocalDate date, String filename, String memo) {
+        Path imgPath = imageSaverService
+                .getUserFileStorageLocation(testuser.getUsername())
+                .resolve(filename);
+        if (Files.exists(imgPath)) {
+            log.info("Image file already exists: {}", imgPath);
+            calendarService.saveOnlyInfo(testuser,
+                    FileMetadata.builder().fileUrl(imgPath.toString()).fileName(filename).build(),
+                    CalendarEntryRequest.builder().date(date).memo(memo).build());
+        }
+    }
+
 
     /**
      * 캘린더 초기 데이터 3개 생성

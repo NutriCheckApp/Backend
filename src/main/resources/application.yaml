@@ -43,4 +43,4 @@ nutricheck:
 logging:
   level:
     root: INFO
-    org.springframework: DEBUG
+    org.springframework: INFO

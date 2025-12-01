@@ -4,6 +4,8 @@ import com.nutricheck.backend.dto.calendar.FileMetadata;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+
 public interface FileSaverService {
 
     FileMetadata saveFile(String userPrefix, MultipartFile file);
@@ -11,4 +13,6 @@ public interface FileSaverService {
     Resource getFile(String fileUrl);
 
     void deleteFile(String fileUrl);
+
+    Path getUserFileStorageLocation(String username);
 }

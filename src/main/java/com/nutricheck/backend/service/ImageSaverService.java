@@ -3,6 +3,7 @@ package com.nutricheck.backend.service;
 import com.nutricheck.backend.dto.calendar.FileMetadata;
 import com.nutricheck.backend.exception.exception.DeleteFileException;
 import com.nutricheck.backend.exception.exception.DirectoryCreationException;
+import com.nutricheck.backend.exception.exception.InvalidImageUrlException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,6 @@ public class ImageSaverService implements FileSaverService {
         return FileMetadata.builder()
                 .fileName(filename)
                 .fileUrl(targetLocation.toString())
-                .fileSize(image.getSize())
                 .build();
     }
 
@@ -84,10 +84,10 @@ public class ImageSaverService implements FileSaverService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new DeleteFileException(fileUrl);
+                throw new InvalidImageUrlException(fileUrl);
             }
         } catch (MalformedURLException e) {
-            throw new DeleteFileException(fileUrl, e);
+            throw new InvalidImageUrlException(fileUrl, e);
         }
     }
 
@@ -105,4 +105,11 @@ public class ImageSaverService implements FileSaverService {
             throw new DeleteFileException(fileUrl, e);
         }
     }
+
+    @Override
+    public Path getUserFileStorageLocation(String username) {
+        return fileStorageLocation.resolve(username);
+    }
+
+
 }
