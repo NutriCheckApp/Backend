@@ -1,14 +1,22 @@
 package com.nutricheck.backend.dto.calendar;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
+@ToString
+@AllArgsConstructor
 public class CalendarEntryRequest {
 
     // "2025-11-25" 형식 (YYYY-MM-DD)
-    private String date;
+    @NotNull(message = "The date field cannot be null. (YYYY-MM-DD)")
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    private LocalDate date;
+
     private String memo;
-    private String imageUrl;   // 나중에 실제 파일 업로드로 확장해도 됨
 }

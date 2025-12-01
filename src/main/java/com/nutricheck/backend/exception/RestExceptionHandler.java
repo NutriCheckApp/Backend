@@ -1,5 +1,7 @@
 package com.nutricheck.backend.exception;
 
+import com.nutricheck.backend.exception.exception.CalendarEntryNotFoundException;
+import com.nutricheck.backend.exception.exception.ImageNotExistsException;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -35,6 +37,9 @@ public class RestExceptionHandler {
         if (e instanceof UsernameNotFoundException
             || e instanceof BadCredentialsException) {
             return new ResponseEntity<>(error.build(), HttpStatus.UNAUTHORIZED);
+        } else if (e instanceof CalendarEntryNotFoundException
+                   || e instanceof ImageNotExistsException) {
+            return new ResponseEntity<>(error.build(), HttpStatus.NOT_FOUND);
         } else if (e instanceof MissingServletRequestParameterException
             || e instanceof HttpMessageNotReadableException
             || e instanceof ConstraintViolationException) {
