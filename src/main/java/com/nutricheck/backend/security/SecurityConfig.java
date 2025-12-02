@@ -76,6 +76,7 @@ public class SecurityConfig {
 //                                .requestMatchers("/pet/**").permitAll()
 //                                .requestMatchers("/profile/**").permitAll()
                                 .requestMatchers("recipes/image/**").permitAll() // static images
+                                .requestMatchers("images/*").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
