@@ -78,4 +78,28 @@ public class PetInfoResponse {
      */
     @JsonProperty("daily_calories")
     private Double dailyCalories;
+
+    /**
+     * 하루 권장 조단백질량(g) / Daily recommended Crude Protein(g)
+     */
+    @JsonProperty("daily_crude_protein")
+    private Double dailyCrudeProtein;
+
+    /**
+     * 하루 권장 조지방량(g) / Daily recommended Crude Fat(g)
+     */
+    @JsonProperty("daily_crude_fat")
+    private Double dailyCrudeFat;
+
+    /**
+     * 하루 권장 조섬유량(mg) / Daily recommended Crude Fiber(mg)
+     */
+    @JsonProperty("daily_crude_fiber")
+    private Double dailyCrudeFiber;
+
+    /**
+     * 하루 권장 칼슘량(g) / Daily recommended Calcium(g)
+     */
+    @JsonProperty("daily_calcium")
+    private Double dailyCalcium;
 }
