@@ -10,6 +10,7 @@ import com.nutricheck.backend.service.CalendarService;
 import com.nutricheck.backend.service.ImageSaverService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,12 @@ public class DataInitializer {
 
     private final ImageSaverService imageSaverService;
 
+    @Value("${nutricheck.init-data}")
+    private Boolean devmode;
+
+    @Value("${nutricheck.recipes.path}")
+    private String recipesPath;
+
     /**
      * 테스트용 샘플 데이터 삽입
      * Initialize sample data for testing
@@ -47,8 +54,9 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initSampleData() {
         return args -> {
-
-
+            if (!devmode) {
+                return;
+            }
             if (userRepository.count() == 0) {
                 log.info("Initializing sample data...");
 
@@ -101,40 +109,6 @@ public class DataInitializer {
 
 
     /**
-     * 캘린더 초기 데이터 3개 생성
-     */
-//    private void initializeCalendarEntries(User user) {
-//
-//        // 1) 오늘 날짜 예시
-//        CalendarEntry entry1 = CalendarEntry.builder()
-//                .user(user)
-//                .date(LocalDate.of(2025, 11, 30))
-//                .memo("닭가슴살 햄버그스테이크(레시피 5) + 간식 1개, 물 충분히 제공")
-//                .imageUrl("https://example.com/calendar/2025-11-30-hamburg.jpg")
-//                .build();
-//
-//        // 2) 내일 예시
-//        CalendarEntry entry2 = CalendarEntry.builder()
-//                .user(user)
-//                .date(LocalDate.of(2025, 12, 1))
-//                .memo("아침: 단호박빵(레시피 1) / 저녁: 참치 샐러드(레시피 6)")
-//                .imageUrl("https://example.com/calendar/2025-12-01-pumpkin-tuna.jpg")
-//                .build();
-//
-//        // 3) 모레 예시
-//        CalendarEntry entry3 = CalendarEntry.builder()
-//                .user(user)
-//                .date(LocalDate.of(2025, 12, 2))
-//                .memo("사라다(레시피 11) 소량 급여 후 30분 산책")
-//                .imageUrl("https://example.com/calendar/2025-12-02-salada.jpg")
-//                .build();
-//
-//        calendarRepository.save(entry1);
-//        calendarRepository.save(entry2);
-//        calendarRepository.save(entry3);
-//    }
-
-    /**
      * 12개 레시피 초기화
      * Initialize 12 recipes
      */
@@ -166,6 +140,7 @@ public class DataInitializer {
     }
 
     private void createRecipe1() {
+        String recipeName = "단호박빵.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("단호박빵")
                 .description("강아지를 위한 건강한 단호박빵")
@@ -175,6 +150,8 @@ public class DataInitializer {
                 .calcium(129.7)
                 .cookingTime(20)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         // 재료 추가
@@ -196,6 +173,7 @@ public class DataInitializer {
     }
 
     private void createRecipe2() {
+        String recipeName = "쿠키.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("쿠키")
                 .description("강아지를 위한 수제 쿠키")
@@ -205,6 +183,8 @@ public class DataInitializer {
                 .calcium(78.0)
                 .cookingTime(30)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "계란", 2.0, "개", 1));
@@ -222,6 +202,7 @@ public class DataInitializer {
     }
 
     private void createRecipe3() {
+        String recipeName = "당근케이크.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("당근케이크")
                 .description("오리 안심과 당근이 들어간 건강한 케이크")
@@ -231,6 +212,8 @@ public class DataInitializer {
                 .calcium(46.3)
                 .cookingTime(40)
                 .difficulty(Recipe.Difficulty.MEDIUM)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "오리 안심", 40.0, "g", 1));
@@ -252,6 +235,7 @@ public class DataInitializer {
     }
 
     private void createRecipe4() {
+        String recipeName = "마가레뜨.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("마가레뜨")
                 .description("고구마가 들어간 건강한 과자")
@@ -261,6 +245,8 @@ public class DataInitializer {
                 .calcium(46.3)
                 .cookingTime(25)
                 .difficulty(Recipe.Difficulty.MEDIUM)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "쌀가루", 110.0, "g", 1));
@@ -280,6 +266,7 @@ public class DataInitializer {
     }
 
     private void createRecipe5() {
+        String recipeName = "햄버그스테이크.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("햄버그스테이크")
                 .description("닭고기로 만든 건강한 햄버그스테이크")
@@ -289,6 +276,8 @@ public class DataInitializer {
                 .calcium(8.3)
                 .cookingTime(15)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "닭 안심", 40.0, "g", 1));
@@ -306,6 +295,7 @@ public class DataInitializer {
     }
 
     private void createRecipe6() {
+        String recipeName = "참치 샐러드.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("참치 샐러드")
                 .description("신선한 채소와 참치로 만든 샐러드")
@@ -315,6 +305,8 @@ public class DataInitializer {
                 .calcium(11.0)
                 .cookingTime(10)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "참치(물담금)", 40.0, "g", 1));
@@ -331,6 +323,7 @@ public class DataInitializer {
     }
 
     private void createRecipe7() {
+        String recipeName = "참치 볶음밥.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("참치 볶음밥")
                 .description("참치와 야채가 들어간 영양만점 볶음밥")
@@ -340,6 +333,8 @@ public class DataInitializer {
                 .calcium(16.0)
                 .cookingTime(15)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "참치(물담금)", 40.0, "g", 1));
@@ -356,6 +351,7 @@ public class DataInitializer {
     }
 
     private void createRecipe8() {
+        String recipeName = "배잡채.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("배잡채")
                 .description("배와 소고기로 만든 건강한 잡채")
@@ -365,6 +361,8 @@ public class DataInitializer {
                 .calcium(14.7)
                 .cookingTime(20)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "소고기", 17.0, "g", 1));
@@ -380,6 +378,7 @@ public class DataInitializer {
     }
 
     private void createRecipe9() {
+        String recipeName = "부침개.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("부침개")
                 .description("닭간과 브로콜리로 만든 영양 부침개")
@@ -389,6 +388,8 @@ public class DataInitializer {
                 .calcium(69.9)
                 .cookingTime(120)
                 .difficulty(Recipe.Difficulty.MEDIUM)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "쌀가루", 30.0, "g", 1));
@@ -408,6 +409,7 @@ public class DataInitializer {
     }
 
     private void createRecipe10() {
+        String recipeName = "치즈핫도그.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("치즈핫도그")
                 .description("사슴고기와 치즈가 들어간 특별한 핫도그")
@@ -417,6 +419,8 @@ public class DataInitializer {
                 .calcium(269.6)
                 .cookingTime(60)
                 .difficulty(Recipe.Difficulty.HARD)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "쌀가루", 130.0, "g", 1));
@@ -442,6 +446,7 @@ public class DataInitializer {
     }
 
     private void createRecipe11() {
+        String recipeName = "사라다.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("사라다")
                 .description("감자, 당근, 사과로 만든 간단한 샐러드")
@@ -451,6 +456,8 @@ public class DataInitializer {
                 .calcium(69.3)
                 .cookingTime(20)
                 .difficulty(Recipe.Difficulty.EASY)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "감자", 3.0, "알", 1));
@@ -468,6 +475,7 @@ public class DataInitializer {
     }
 
     private void createRecipe12() {
+        String recipeName = "안티에이징스무디.png";
         Recipe recipe = Recipe.builder()
                 .recipeName("안티에이징스무디")
                 .description("항산화 성분이 풍부한 건강 스무디")
@@ -477,6 +485,8 @@ public class DataInitializer {
                 .calcium(108.0)
                 .cookingTime(15)
                 .difficulty(Recipe.Difficulty.MEDIUM)
+                .imageName(recipeName)
+                .imageUrl(Path.of(recipesPath, recipeName).toString())
                 .build();
 
         recipe.getIngredients().add(createIngredient(recipe, "바나나", 100.0, "g", 1));

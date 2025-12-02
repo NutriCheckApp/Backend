@@ -1,12 +1,13 @@
 package com.nutricheck.backend.service;
-import com.nutricheck.backend.domain.Recipe;
-import com.nutricheck.backend.domain.RecipeIngredient;
-import com.nutricheck.backend.domain.RecipeStep;
+
+import com.nutricheck.backend.domain.*;
 import com.nutricheck.backend.dto.recipe.*;
+import com.nutricheck.backend.exception.exception.InvalidImageUrlException;
 import com.nutricheck.backend.repository.RecipeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,8 +25,7 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
+    private final ImageSaverService imageSaverService;
 
     /**
      * 메인 화면용 레시피 리스트 (최대 12개)
@@ -46,10 +47,6 @@ public class RecipeService {
     public RecipeDetailResponse getRecipeDetail(Long recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new EntityNotFoundException("레시피를 찾을 수 없습니다. id=" + recipeId));
-        //
-        if (recipe.getImageUrl() == null) {
-            recipe.setImageUrl(contextPath + "/images/recipe_" + recipeId + ".png"); // todo: fix later
-        }
         return toDetailResponse(recipe);
     }
 
@@ -59,7 +56,7 @@ public class RecipeService {
         return RecipeSummaryResponse.builder()
                 .recipeId(recipe.getRecipeId())
                 .recipeName(recipe.getRecipeName())
-                .imageUrl(recipe.getImageUrl())
+                .imageName(recipe.getImageName())
                 .build();
     }
 
@@ -91,7 +88,7 @@ public class RecipeService {
                 .fat(recipe.getFat())
                 .fiber(recipe.getFiber())
                 .calcium(recipe.getCalcium())
-                .imageUrl(recipe.getImageUrl())
+                .imageName(recipe.getImageName())
                 .ingredients(ingredientResponses)
                 .steps(stepResponses)
                 .build();
@@ -115,5 +112,18 @@ public class RecipeService {
                 .imageUrl(step.getImageUrl())
                 .estimatedTime(step.getEstimatedTime())
                 .build();
+    }
+
+    public Resource getImage(String filename) {
+
+        Recipe recipeByImageName = recipeRepository.getRecipeByImageName(filename)
+                .orElseThrow(InvalidImageUrlException::new);
+
+        log.info("recipeByImageName: {}", recipeByImageName);
+
+        if (recipeByImageName.getImageUrl() == null || recipeByImageName.getImageUrl().isBlank()) {
+            throw new InvalidImageUrlException();
+        }
+        return imageSaverService.getFile(recipeByImageName.getImageUrl());
     }
 }

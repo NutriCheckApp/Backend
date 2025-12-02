@@ -71,11 +71,11 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers(WHITELIST).permitAll()
 //                        .anyRequest().permitAll()
-                                .requestMatchers("/calendar/**").permitAll() // calendar test용
-                                .requestMatchers("/recipes/**").permitAll()
-                                .requestMatchers("/pet/**").permitAll()
-                                .requestMatchers("/profile/**").permitAll()
-                                .requestMatchers("/images/**").permitAll() // static images
+//                                .requestMatchers("/calendar/**").permitAll() // calendar test용
+//                                .requestMatchers("/recipes/**").permitAll()
+//                                .requestMatchers("/pet/**").permitAll()
+//                                .requestMatchers("/profile/**").permitAll()
+                                .requestMatchers("recipes/image/**").permitAll() // static images
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

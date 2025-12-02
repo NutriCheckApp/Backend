@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 레시피 리포지토리
@@ -19,4 +20,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     List<Recipe> findByRecipeNameContaining(String recipeName);
 
+    Optional<Recipe> getRecipeByImageName(String imageName);
 }

@@ -101,6 +101,9 @@ public class Recipe {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    @Column(name = "image_name", length = 300)
+    private String imageName;
+
     /**
      * 적합한 강아지 크기 (소형, 중형, 대형, 전체)
      * Suitable pet size
