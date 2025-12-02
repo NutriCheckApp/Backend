@@ -37,7 +37,7 @@ public class CalendarController {
     }
 
     @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CalendarEntryResponse> uploadPhoto(
+    public ResponseEntity<CalendarEntryResponse> updateEntry(
             @Valid @ModelAttribute CalendarEntryRequest request,
             @AuthenticationPrincipal User user,
             @RequestParam("file") MultipartFile file) {
@@ -47,6 +47,14 @@ public class CalendarController {
         CalendarEntryResponse calendarEntryResponse = calendarService.saveImage(user, file, request);
         return ResponseEntity.ok(calendarEntryResponse);
     }
+
+    @PostMapping("/memo")
+    public ResponseEntity<CalendarEntryResponse> updateMemoOnly(@AuthenticationPrincipal User user,
+                                                                @Valid @RequestBody CalendarEntryRequest request) {
+        CalendarEntryResponse calendarEntryResponse = calendarService.saveMemo(user, request);
+        return ResponseEntity.ok(calendarEntryResponse);
+    }
+
 
     @GetMapping("/image/{filename:.+}")
     public ResponseEntity<Resource> getImage(@AuthenticationPrincipal User user,

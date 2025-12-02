@@ -139,4 +139,24 @@ public class CalendarService {
                 .build();
     }
 
+    public CalendarEntryResponse saveMemo(User user, CalendarEntryRequest request) {
+        CalendarEntry calendarEntry = calendarRepository
+                .findByUserAndDate(user, request.getDate())
+                .orElseGet(CalendarEntry::new);
+
+        // save memo
+        calendarEntry.setUser(user);
+        calendarEntry.setMemo(request.getMemo());
+        calendarEntry.setDate(request.getDate());
+
+        CalendarEntry saved = calendarRepository.save(calendarEntry);
+
+        log.info("Saved calendar entry: {}", saved);
+
+        return CalendarEntryResponse.builder()
+                .date(saved.getDate())
+                .memo(saved.getMemo())
+                .imageName(saved.getImageName())
+                .build();
+    }
 }
