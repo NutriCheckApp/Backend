@@ -6,6 +6,10 @@ import com.nutricheck.backend.dto.recipe.RecipeSummaryResponse;
 import com.nutricheck.backend.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,9 +46,7 @@ public class RecipeController {
     @PostMapping("/detail")
     public RecipeDetailResponse getRecipeDetail(@RequestHeader String host,
                                                 @RequestBody RecipeDetailRequest request) {
-        RecipeDetailResponse recipeDetail = recipeService.getRecipeDetail(request.getRecipeId());
-        recipeDetail.setImageUrl("http://" + host + recipeDetail.getImageUrl());
-        return recipeDetail;
+        return recipeService.getRecipeDetail(request.getRecipeId());
     }
 
     /**
@@ -54,8 +56,19 @@ public class RecipeController {
     @GetMapping("/{recipeId}")
     public RecipeDetailResponse getRecipeDetailByPath(@RequestHeader String host,
                                                       @PathVariable Long recipeId) {
-        RecipeDetailResponse recipeDetail = recipeService.getRecipeDetail(recipeId);
-        recipeDetail.setImageUrl("http://" + host + recipeDetail.getImageUrl());
-        return recipeDetail;
+        return recipeService.getRecipeDetail(recipeId);
+    }
+
+    @GetMapping("/image/{filename:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        Resource resource = recipeService.getImage( filename);
+        if (resource == null) {
+            log.info("resource == null" );
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

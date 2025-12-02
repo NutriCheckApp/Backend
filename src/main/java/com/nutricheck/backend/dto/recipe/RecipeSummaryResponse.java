@@ -16,5 +16,7 @@ public class RecipeSummaryResponse {
     @JsonProperty("recipe_name")
     private String recipeName;
 
-    private String imageUrl;
+    @JsonProperty("image_name")
+    private String imageName;
+
 }

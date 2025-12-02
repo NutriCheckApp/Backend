@@ -33,8 +33,8 @@ public class RecipeDetailResponse {
 
     private Double calcium;
 
-    @JsonProperty("imageUrl")
-    private String imageUrl;
+    @JsonProperty("image_name")
+    private String imageName;
 
     @JsonProperty("recipe_ingredients")
     private List<RecipeIngredientResponse> ingredients;

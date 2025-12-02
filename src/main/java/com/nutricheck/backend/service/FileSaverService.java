@@ -10,6 +10,11 @@ public interface FileSaverService {
 
     FileMetadata saveFile(String userPrefix, MultipartFile file);
 
+    /**
+     * Retrieves a file resource from the specified URL string.
+     *
+     * @param fileUrl The path or URL string of the resource to retrieve.
+     */
     Resource getFile(String fileUrl);
 
     void deleteFile(String fileUrl);

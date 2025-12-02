@@ -33,11 +33,17 @@ server:
   port: 8080
 
 nutricheck:
+  init-data: true
+
   jwt:
     secret: c9f2b57a978321cc6cfd84d2ec7bb6f87df0541bf738e34d819bc0efaa48f0a8
     expiration: 8640000
   image:
     save-path: C:\Users\mizar\Desktop\folder
+    isRelative: false
+
+  recipes:
+    path: C:\Users\mizar\Desktop\folder\recipe
     isRelative: false
 
 logging:
