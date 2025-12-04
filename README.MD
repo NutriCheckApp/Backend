@@ -1,7 +1,6 @@
 # NutriCheck App - Backend API Server
 
 ### ✅ 구성원 기여 내역
-```
 * **김민우** 
   * 캘린더 기능 구현
   * 레시피 추천 페이지 기능 구현, 발표
@@ -14,7 +13,6 @@
 * **권현우** 
   * DB설계
   * 칼로리 계산 기능 구현
-```
 
 This project serves as the Backend API Server for the NutriCheck application, built using Spring Boot and Java.
 It is responsible for handling all business logic, data persistence, user authentication, and serving API endpoints for
